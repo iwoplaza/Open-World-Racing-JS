@@ -1,0 +1,9 @@
+{
+    "shaders": [
+        "environment"
+    ],
+    
+    "textures": [
+        "car.png", "interior.png"
+    ]
+}

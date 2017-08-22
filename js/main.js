@@ -64,10 +64,10 @@ function drawScene() {
 function webGLStart() {
     canvas = document.getElementById("gameCanvas");
     initGL();
-    ShaderManager.init();
+    /*ShaderManager.init();
     PointerLock.init(canvas);
     Car.init();
-    World.init();
+    World.init();*/
 
 	for(var i = 0; i < keyState.length; i++){
 		keyState[i] = false;
@@ -81,14 +81,12 @@ function webGLStart() {
     gl.enable(gl.CULL_FACE);
     gl.cullFace(gl.BACK);
     
-	ResourceManager.preloadBaseResources();
-    
-    tick();
+    (new ResourceManager()).preloadFromFile('resources.json', onFinishedLoading);
 }
 
 function onFinishedLoading(){
     console.log("Finished loading resources!");
-    
+    tick();
     gameStart();
 }
 
