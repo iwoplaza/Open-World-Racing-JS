@@ -1,0 +1,8 @@
+# Blender MTL File: 'car.blend'
+# Material Count: 3
+
+newmtl Car
+map_Kd car.png
+
+newmtl interior
+map_Kd interior.png
