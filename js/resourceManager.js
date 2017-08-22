@@ -28,7 +28,7 @@ var ResourceManager = {
     },
 
     drawLoadingScreen: function() {
-        useShader("default");
+        ShaderManager.use("default");
         
         if(this.resourcesLoaded < this.resourcesToLoad){
             console.log("Progress: " + this.resourcesLoaded + " / " + this.resourcesToLoad);

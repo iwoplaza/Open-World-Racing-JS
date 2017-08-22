@@ -28,7 +28,7 @@ var TextureManager = {
         this.enableTextures();
         gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, textureId);
-        gl.uniform1i(gl.getUniformLocation(getCurrentShader().program, "uSampler"), 0);
+        ShaderManager.setUniform1i("uSampler", 0);
     },
 
     preload: function() {

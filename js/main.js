@@ -64,7 +64,7 @@ function drawScene() {
 function webGLStart() {
     canvas = document.getElementById("gameCanvas");
     initGL();
-    initShaders();
+    ShaderManager.init();
     PointerLock.init(canvas);
     Car.init();
     World.init();

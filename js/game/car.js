@@ -76,8 +76,8 @@ function Car(p_x, p_y, p_z) {
 	this.display = function() {
         this.wheel_rotations = [this.wheelAngle, this.wheelAngle, 0, 0];
         
-        useShader("car");
-        gl.uniform3f(gl.getUniformLocation(getCurrentShader().program, "uBodyColor"), this.bodyColor[0], this.bodyColor[1], this.bodyColor[2]);
+        ShaderManager.use("car");
+        ShaderManager.setUniform3f("uBodyColor", this.bodyColor[0], this.bodyColor[1], this.bodyColor[2]);
         
 		GLHelper.saveState();
         TextureManager.bindTexture(TextureManager.database["res/car.png"].textureId);

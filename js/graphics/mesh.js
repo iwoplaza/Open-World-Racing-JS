@@ -8,42 +8,42 @@ function Mesh() {
     
     this.draw = function() {
         gl.bindBuffer(gl.ARRAY_BUFFER, this.positionBuffer);
-        gl.vertexAttribPointer(getCurrentShader().program.vertexPositionAttribute, this.positionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+        gl.vertexAttribPointer(ShaderManager.getCurrent().program.vertexPositionAttribute, this.positionBuffer.itemSize, gl.FLOAT, false, 0, 0);
 
         gl.bindBuffer(gl.ARRAY_BUFFER, this.colorBuffer);
-        gl.vertexAttribPointer(getCurrentShader().program.vertexColorAttribute, this.colorBuffer.itemSize, gl.FLOAT, false, 0, 0);
+        gl.vertexAttribPointer(ShaderManager.getCurrent().program.vertexColorAttribute, this.colorBuffer.itemSize, gl.FLOAT, false, 0, 0);
 
         if(TextureManager.areTexturesEnabled()){
             gl.bindBuffer(gl.ARRAY_BUFFER, this.textureCoordBuffer);
-            gl.enableVertexAttribArray(getCurrentShader().program.textureCoordAttribute);
-            gl.vertexAttribPointer(getCurrentShader().program.textureCoordAttribute, this.textureCoordBuffer.itemSize, gl.FLOAT, false, 0, 0);
+            gl.enableVertexAttribArray(ShaderManager.getCurrent().program.textureCoordAttribute);
+            gl.vertexAttribPointer(ShaderManager.getCurrent().program.textureCoordAttribute, this.textureCoordBuffer.itemSize, gl.FLOAT, false, 0, 0);
         }else{
-            gl.disableVertexAttribArray(getCurrentShader().program.textureCoordAttribute);
+            gl.disableVertexAttribArray(ShaderManager.getCurrent().program.textureCoordAttribute);
         }
         
-        if(getCurrentShader().program.normalAttribute != undefined){
+        if(ShaderManager.getCurrent().program.normalAttribute != undefined){
             gl.bindBuffer(gl.ARRAY_BUFFER, this.normalBuffer);
-            gl.vertexAttribPointer(getCurrentShader().program.normalAttribute, this.normalBuffer.itemSize, gl.FLOAT, false, 0, 0);
+            gl.vertexAttribPointer(ShaderManager.getCurrent().program.normalAttribute, this.normalBuffer.itemSize, gl.FLOAT, false, 0, 0);
         }
         
         GLHelper.publishMatrixUniforms();
         if(TextureManager.areTexturesEnabled()){
-            gl.uniform1i(getCurrentShader().program.enableTexturesUniform, 1);
+            gl.uniform1i(ShaderManager.getCurrent().program.enableTexturesUniform, 1);
         }else{
-            gl.uniform1i(getCurrentShader().program.enableTexturesUniform, 0);
+            gl.uniform1i(ShaderManager.getCurrent().program.enableTexturesUniform, 0);
         }
         
         if(this.boneIndiciesBuffer != undefined) {
             gl.bindBuffer(gl.ARRAY_BUFFER, this.boneIndiciesBuffer);
-            gl.enableVertexAttribArray(getCurrentShader().program.boneIndiciesAttribute);
-            gl.vertexAttribPointer(getCurrentShader().program.boneIndiciesAttribute, this.boneIndiciesBuffer.itemSize, gl.FLOAT, false, 0, 0);
+            gl.enableVertexAttribArray(ShaderManager.getCurrent().program.boneIndiciesAttribute);
+            gl.vertexAttribPointer(ShaderManager.getCurrent().program.boneIndiciesAttribute, this.boneIndiciesBuffer.itemSize, gl.FLOAT, false, 0, 0);
             
             gl.bindBuffer(gl.ARRAY_BUFFER, this.boneWeightsBuffer);
-            gl.enableVertexAttribArray(getCurrentShader().program.boneWeightsAttribute);
-            gl.vertexAttribPointer(getCurrentShader().program.boneWeightsAttribute, this.boneWeightsBuffer.itemSize, gl.FLOAT, false, 0, 0);
-        }else if(getCurrentShader().program.boneIndiciesAttribute != undefined){
-            gl.disableVertexAttribArray(getCurrentShader().program.boneIndiciesAttribute);
-            gl.disableVertexAttribArray(getCurrentShader().program.boneWeightsAttribute);
+            gl.enableVertexAttribArray(ShaderManager.getCurrent().program.boneWeightsAttribute);
+            gl.vertexAttribPointer(ShaderManager.getCurrent().program.boneWeightsAttribute, this.boneWeightsBuffer.itemSize, gl.FLOAT, false, 0, 0);
+        }else if(ShaderManager.getCurrent().program.boneIndiciesAttribute != undefined){
+            gl.disableVertexAttribArray(ShaderManager.getCurrent().program.boneIndiciesAttribute);
+            gl.disableVertexAttribArray(ShaderManager.getCurrent().program.boneWeightsAttribute);
         }
         
         gl.drawArrays(gl.TRIANGLES, 0, this.positionBuffer.numItems);
