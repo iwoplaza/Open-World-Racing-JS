@@ -43,10 +43,8 @@ window.onkeyup = function(e) {
 function tick() {
     Time.tick();
     
-	if(ResourceManager.drawLoadingScreen()){
-		update();
-		drawScene();
-	}
+	update();
+	drawScene();
     
     requestAnimationFrame(tick);
 }
@@ -64,9 +62,10 @@ function drawScene() {
 function webGLStart() {
     canvas = document.getElementById("gameCanvas");
     initGL();
+	PointerLock.init(canvas);
     /*ShaderManager.init();
-    PointerLock.init(canvas);
-    Car.init();
+    
+    
     World.init();*/
 
 	for(var i = 0; i < keyState.length; i++){
@@ -92,4 +91,6 @@ function onFinishedLoading(){
 
 function gameStart() {
     ScreenHandler.open(new ScreenGame());
+	World.init();
+	Car.init();
 }

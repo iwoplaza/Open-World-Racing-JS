@@ -1,7 +1,7 @@
 var ShaderManager = {
     shaders: new Array(0),
     current: null,
-    
+	
     //This function is called after the resources have been loaded
     postInit: function() {
         this.create("default", function(program) {
@@ -28,7 +28,8 @@ var ShaderManager = {
     
     loadResource: function(resourceManager, name) {
         this.shaders[name] = {
-            name: name
+            name: name,
+			attributes: []
         };
         
         resourceManager.addTask();
@@ -36,45 +37,83 @@ var ShaderManager = {
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.onreadystatechange = function(){
             if(xmlhttp.status == 200 && xmlhttp.readyState == 4){
-                var vertexShader = gl.createShader(gl.VERTEX_SHADER);
-                var fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
-                
-                gl.shaderSource(vertexShader, xmlhttp.responseText);
-                gl.compileShader(vertexShader);
-
-                if (!gl.getShaderParameter(vertexShader, gl.COMPILE_STATUS)) {
-                    alert(gl.getShaderInfoLog(vertexShader));
-                    return null;
-                }
-                
-                gl.shaderSource(fragmentShader, xmlhttp.responseText);
-                gl.compileShader(fragmentShader);
-
-                if (!gl.getShaderParameter(fragmentShader, gl.COMPILE_STATUS)) {
-                    alert(gl.getShaderInfoLog(fragmentShader));
-                    return null;
-                }
-                
-                ShaderManager.shaders[name].vertexShader = vertexShader;
-                ShaderManager.shaders[name].fragmentShader = fragmentShader;
-                
-                //Creaing a Shader Program
-                var shaderProgram = gl.createProgram();
-                gl.attachShader(shaderProgram, this.shaders[name].vertexShader);
-                gl.attachShader(shaderProgram, this.shaders[name].fragmentShader);
-                gl.linkProgram(shaderProgram);
-
-                if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) {
-                    alert("Could not initialise shaders");
-                }
-                this.shaders[name].program = shaderProgram;
-                
-                resourceManager.releaseTask();
+				ShaderManager.shaders[name].sourceCode = xmlhttp.responseText;
+                ShaderManager.compile(resourceManager, name);
             }
         }
-        xmlhttp.open("GET","res/shaders/"+name+".json", true);
+        xmlhttp.open("GET","res/shaders/"+name+".shader", true);
         xmlhttp.send();
     },
+	
+	compile: function(resourceManager, name) {
+		var vertexShader = gl.createShader(gl.VERTEX_SHADER);
+		var fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
+		
+		var vertexShaderSource = "";
+		var fragmentShaderSource = "";
+		var mode = 0;
+		var lines = this.shaders[name].sourceCode.split('\n');
+		for(var i in lines) {
+			var line = lines[i];
+			if(line.beginsWith('[')) {
+				if(line.substring(1).beginsWith('VERTEX')) {
+					mode = 1;
+				}else if(line.substring(1).beginsWith('FRAGMENT')) {
+					mode = 2;
+				}
+				lines.splice(i, 1);
+				i--;
+			}else{
+				if(mode == 1)
+					vertexShaderSource += line + '\n';
+				else if(mode == 2)
+					fragmentShaderSource += line + '\n';
+			}
+		}
+		
+		gl.shaderSource(vertexShader, vertexShaderSource);
+		gl.compileShader(vertexShader);
+
+		if (!gl.getShaderParameter(vertexShader, gl.COMPILE_STATUS)) {
+			alert(gl.getShaderInfoLog(vertexShader));
+			return null;
+		}
+
+		gl.shaderSource(fragmentShader, fragmentShaderSource);
+		gl.compileShader(fragmentShader);
+
+		if (!gl.getShaderParameter(fragmentShader, gl.COMPILE_STATUS)) {
+			alert(gl.getShaderInfoLog(fragmentShader));
+			return null;
+		}
+
+		ShaderManager.shaders[name].vertexShader = vertexShader;
+		ShaderManager.shaders[name].fragmentShader = fragmentShader;
+
+		//Creaing a Shader Program
+		var shaderProgram = gl.createProgram();
+		gl.attachShader(shaderProgram, this.shaders[name].vertexShader);
+		gl.attachShader(shaderProgram, this.shaders[name].fragmentShader);
+		gl.linkProgram(shaderProgram);
+
+		if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) {
+			alert("Could not initialise shaders");
+		}
+		this.shaders[name].program = shaderProgram;
+		
+		for(var i in lines) {
+			var line = lines[i];
+			if(line.beginsWith('attribute')) {
+				var variableName = line.split(' ')[2].slice(0, -2);
+				var attributeName = variableName.charAt(1).toLowerCase() + variableName.slice(2);
+				console.log("Attribute", "Var:"+variableName+"Att:"+attributeName);
+				this.shaders[name].attributes[attributeName] = gl.getAttribLocation(shaderProgram, variableName);
+				gl.enableVertexAttribArray(this.shaders[name].attributes[attributeName]);
+			}
+		}
+		
+		resourceManager.releaseTask();
+	},
     
     create: function(p_name, p_callback) {
         shaderProgram.vertexPositionAttribute = gl.getAttribLocation(shaderProgram, "aVertexPosition");
@@ -121,6 +160,18 @@ var ShaderManager = {
     getUniformLocation: function(p_name) {
         return gl.getUniformLocation(this.current.program, p_name);
     },
+	
+	hasAttribute: function(name) {
+		return this.current.attributes[name] != undefined;
+	},
+	
+	getAttribute: function(name) {
+		return this.current.attributes[name];
+	},
+	
+	vertexAttribPointer: function(attribute, size, type, flag, x, y) {
+		gl.vertexAttribPointer(this.getAttribute(attribute), size, type, flag, x, y);
+	},
     
     setUniform1i(p_name, p_x) { gl.uniform1i(ShaderManager.getUniformLocation(p_name), p_x) },
     setUniform1f(p_name, p_x) { gl.uniform1f(ShaderManager.getUniformLocation(p_name), p_x) },

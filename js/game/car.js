@@ -80,7 +80,6 @@ function Car(p_x, p_y, p_z) {
         ShaderManager.setUniform3f("uBodyColor", this.bodyColor[0], this.bodyColor[1], this.bodyColor[2]);
         
 		GLHelper.saveState();
-        TextureManager.bindTexture(TextureManager.database["res/car.png"].textureId);
         GLHelper.translate([this.x,this.y,this.z]);
         //GLHelper.translate([this.buttOffset, 0, 0]);
         GLHelper.rotate(this.angle+(90*Math.PI/180),[0,1,0]);

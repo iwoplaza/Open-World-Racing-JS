@@ -47,10 +47,10 @@ var GLHelper = {
     },
     
     publishMatrixUniforms: function() {
-        gl.uniformMatrix4fv(ShaderManager.getCurrent().program.pMatrixUniform, false, this.projectionMatrix);
-        gl.uniformMatrix4fv(ShaderManager.getCurrent().program.mMatrixUniform, false, this.modelMatrix);
-        gl.uniformMatrix4fv(ShaderManager.getCurrent().program.vMatrixUniform, false, Camera.viewMatrix);
-        gl.uniformMatrix4fv(ShaderManager.getCurrent().program.nMatrixUniform, false, this.normalMatrix);
+        gl.uniformMatrix4fv(ShaderManager.getUniformLocation('uPMatrix'), false, this.projectionMatrix);
+        gl.uniformMatrix4fv(ShaderManager.getUniformLocation('uMMatrix'), false, this.modelMatrix);
+        gl.uniformMatrix4fv(ShaderManager.getUniformLocation('uVMatrix'), false, Camera.viewMatrix);
+        gl.uniformMatrix4fv(ShaderManager.getUniformLocation('uNMatrix'), false, this.normalMatrix);
     },
     
     resetToWorldMatrix: function() {

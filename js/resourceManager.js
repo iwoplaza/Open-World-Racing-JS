@@ -22,6 +22,12 @@ ResourceManager.prototype.load = function(jsonData) {
         let shader = jsonData.shaders[i];
         ShaderManager.loadResource(this, shader);
     }
+	
+	//Loading Textures
+    for(let i in jsonData.textures) {
+        let texture = jsonData.textures[i];
+        TextureManager.loadResource(this, texture);
+    }
 }
 
 ResourceManager.prototype.addTask = function() {

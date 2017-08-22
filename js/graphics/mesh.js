@@ -8,32 +8,28 @@ function Mesh() {
     
     this.draw = function() {
         gl.bindBuffer(gl.ARRAY_BUFFER, this.positionBuffer);
-        gl.vertexAttribPointer(ShaderManager.getCurrent().program.vertexPositionAttribute, this.positionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+        ShaderManager.vertexAttribPointer('vertexPosition', this.positionBuffer.itemSize, gl.FLOAT, false, 0, 0);
 
         gl.bindBuffer(gl.ARRAY_BUFFER, this.colorBuffer);
-        gl.vertexAttribPointer(ShaderManager.getCurrent().program.vertexColorAttribute, this.colorBuffer.itemSize, gl.FLOAT, false, 0, 0);
+        ShaderManager.vertexAttribPointer('vertexColor', this.colorBuffer.itemSize, gl.FLOAT, false, 0, 0);
 
         if(TextureManager.areTexturesEnabled()){
             gl.bindBuffer(gl.ARRAY_BUFFER, this.textureCoordBuffer);
-            gl.enableVertexAttribArray(ShaderManager.getCurrent().program.textureCoordAttribute);
-            gl.vertexAttribPointer(ShaderManager.getCurrent().program.textureCoordAttribute, this.textureCoordBuffer.itemSize, gl.FLOAT, false, 0, 0);
+            gl.enableVertexAttribArray(ShaderManager.getAttribute('textureCoord'));
+            ShaderManager.vertexAttribPointer('textureCoord', this.textureCoordBuffer.itemSize, gl.FLOAT, false, 0, 0);
         }else{
-            gl.disableVertexAttribArray(ShaderManager.getCurrent().program.textureCoordAttribute);
+            gl.disableVertexAttribArray(ShaderManager.getAttribute('textureCoord'));
         }
         
-        if(ShaderManager.getCurrent().program.normalAttribute != undefined){
+        if(ShaderManager.hasAttribute('normal')){
             gl.bindBuffer(gl.ARRAY_BUFFER, this.normalBuffer);
-            gl.vertexAttribPointer(ShaderManager.getCurrent().program.normalAttribute, this.normalBuffer.itemSize, gl.FLOAT, false, 0, 0);
+            ShaderManager.vertexAttribPointer('normal', this.normalBuffer.itemSize, gl.FLOAT, false, 0, 0);
         }
         
         GLHelper.publishMatrixUniforms();
-        if(TextureManager.areTexturesEnabled()){
-            gl.uniform1i(ShaderManager.getCurrent().program.enableTexturesUniform, 1);
-        }else{
-            gl.uniform1i(ShaderManager.getCurrent().program.enableTexturesUniform, 0);
-        }
-        
-        if(this.boneIndiciesBuffer != undefined) {
+		ShaderManager.setUniform1i('uEnableTextures', TextureManager.areTexturesEnabled());
+		
+        /*if(this.boneIndiciesBuffer != undefined) {
             gl.bindBuffer(gl.ARRAY_BUFFER, this.boneIndiciesBuffer);
             gl.enableVertexAttribArray(ShaderManager.getCurrent().program.boneIndiciesAttribute);
             gl.vertexAttribPointer(ShaderManager.getCurrent().program.boneIndiciesAttribute, this.boneIndiciesBuffer.itemSize, gl.FLOAT, false, 0, 0);
@@ -44,7 +40,7 @@ function Mesh() {
         }else if(ShaderManager.getCurrent().program.boneIndiciesAttribute != undefined){
             gl.disableVertexAttribArray(ShaderManager.getCurrent().program.boneIndiciesAttribute);
             gl.disableVertexAttribArray(ShaderManager.getCurrent().program.boneWeightsAttribute);
-        }
+        }*/
         
         gl.drawArrays(gl.TRIANGLES, 0, this.positionBuffer.numItems);
     };

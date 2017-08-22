@@ -36,9 +36,10 @@ var TextureManager = {
         this.loadTexture("res/interior.png");
     },
 
-    loadTexture: function(filePath) {
-        ResourceManager.registerResourceToLoad();
+    loadResource: function(resourceManager, filePath) {
+        resourceManager.addTask();
         var fontImage = new Image();
+		fontImage.resourceManager = resourceManager;
         fontImage.onload = function() {
             var texture = gl.createTexture();
             TextureManager.handleTextureLoaded(this, texture);
@@ -47,8 +48,8 @@ var TextureManager = {
                 width: this.width,
                 height: this.height
             };
-            ResourceManager.checkOutResourceLoaded();
+            this.resourceManager.releaseTask();
         }
-        fontImage.src = filePath;
+        fontImage.src = "res/textures/"+filePath;
     }
 }

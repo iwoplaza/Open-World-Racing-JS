@@ -1,8 +1,8 @@
 {
     "shaders": [
-        "environment"
+        "environment", "car"
     ],
-    
+	
     "textures": [
         "car.png", "interior.png"
     ]

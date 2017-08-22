@@ -11,7 +11,7 @@ var MtlImporter = {
             if(elements[0] == "newmtl") {
                 name = elements[1];
             }else if(elements[0] == "map_Kd") {
-                objects[name] = "res/"+elements[1];
+                objects[name] = elements[1];
             }
         }
         console.log(objects);
