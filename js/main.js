@@ -8,8 +8,6 @@ var key_Up = 87;
 var key_Down = 83;
 var key_Interact = 69;
 
-var lastTime = Date.now();
-
 function initGL() {
     try {
         gl = canvas.getContext("experimental-webgl");
@@ -49,6 +47,8 @@ function tick() {
 		update();
 		drawScene();
 	}
+    
+    requestAnimationFrame(tick);
 }
 
 function update() {
@@ -83,7 +83,7 @@ function webGLStart() {
     
 	ResourceManager.preloadBaseResources();
     
-    setInterval(tick, 1000/60);
+    tick();
 }
 
 function onFinishedLoading(){
