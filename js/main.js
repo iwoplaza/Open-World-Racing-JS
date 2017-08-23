@@ -92,5 +92,4 @@ function onFinishedLoading(){
 function gameStart() {
     ScreenHandler.open(new ScreenGame());
 	World.init();
-	Car.init();
 }

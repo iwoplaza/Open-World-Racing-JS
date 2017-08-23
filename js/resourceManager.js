@@ -28,6 +28,11 @@ ResourceManager.prototype.load = function(jsonData) {
         let texture = jsonData.textures[i];
         TextureManager.loadResource(this, texture);
     }
+    
+    //Loading models and mtllibs
+    ObjImporter.registerObj("car");
+    ObjImporter.registerObj("town");
+    ObjImporter.load(this);
 }
 
 ResourceManager.prototype.addTask = function() {

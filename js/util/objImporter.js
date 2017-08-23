@@ -1,8 +1,15 @@
+var ObjLoadQueue = new Array(0);
+var ModelLib = new Array(0);
+var MtlLib = new Array(0);
 var ObjImporter = {
-    getMeshes: function(text, mtllib) {
-        var objects = [];
-        
+    buffer: new Array(0),
+    importModel: function(name){
+        registerObj(name+".obj");
+    },
+    getModel: function(text) {
+        var Model = {};
         var name = "";
+        var mtl = "";
 		
         var positions = new Array(0);
         var norms = new Array(0);
@@ -12,8 +19,6 @@ var ObjImporter = {
         var colors = new Array(0);
         var texCoords = new Array(0);
         var normals = new Array(0);
-        
-        var textures = new Array(0);
         
         var lines = text.split("\n");
         for(var l = 0; l < lines.length; l++) {
@@ -44,10 +49,36 @@ var ObjImporter = {
             }else if(elements[0] == "o") {
                 //If an object was defined before, store all the information in the array with that name.
                 if (name != "") {
-                    objects[name] = [new Mesh(), this.textures];
                     for(var i = 0; i < vertices.length/3*4; i++) colors.push(1);
                     for(var i = 0; i < vertices.length/3*2; i++) texCoords.push(0);
-                    objects[name][0].fillOut(Object.create(vertices), Object.create(colors), Object.create(texCoords), Object.create(normals));
+                    /*
+                    var x = {min: vertices[0], max: vertices[0]};
+                    var y = {min: vertices[1], max: vertices[1]};
+                    var z = {min: vertices[2], max: vertices[2]};
+                    for (var i=0;i<vertices.length/3;i+=3){
+                        x.min = vertices[i]<x.min?vertices[i]:x.min;
+                        x.max = vertices[i]>x.max?vertices[i]:x.max;
+                        y.min = vertices[i+1]<y.min?vertices[i+1]:y.min;
+                        y.max = vertices[i+1]>y.max?vertices[i+1]:y.max;
+                        z.min = vertices[i+2]<z.min?vertices[i+2]:z.min;
+                        z.max = vertices[i+2]>z.max?vertices[i+2]:z.max;
+                    }
+                    x = (x.min+x.max)/2;
+                    y = (y.min+y.max)/2;
+                    z = (z.min+z.max)/2;
+                    for (var i=0;i<vertices.length/3;i+=3){
+                        vertices[i] -= x;
+                        vertices[i+1].y -= y;
+                        vertices[i+2].z -= z;
+                    }
+                    */
+                    Model[name] = {mesh: new Mesh(), mtl: mtl, offset: [0, 0, 0], rotation: {x: 0, y: 0, z: 0}};
+                    Model[name].mesh.fillOut(Object.create(vertices), Object.create(colors), Object.create(texCoords), Object.create(normals));
+                    console.groupCollapsed();
+                    console.log("Name: "+name);
+                    console.log("Mtl : "+mtl);
+                    console.log("Vert: "+vertices.length);
+                    console.groupEnd();
                     vertices = [];
                     colors = [];
                     normals = [];
@@ -55,14 +86,100 @@ var ObjImporter = {
                 }
                 name = elements[1];
             }else if(elements[0] == "usemtl"){
-                this.textures = mtllib[elements[1]];
+                mtl = elements[1];
+            }else if(elements[0] == "mtllib"){
+                Model.mtllib = elements[1];
             }
         }
-        objects[name] = [new Mesh(), this.textures];
         for(var i = 0; i < vertices.length/3*4; i++) colors.push(1);
         for(var i = 0; i < vertices.length/3*2; i++) texCoords.push(0);
-        objects[name][0].fillOut(vertices, colors, texCoords, normals);
+        /*
+        var x = {min: vertices[0], max: vertices[0]};
+        var y = {min: vertices[1], max: vertices[1]};
+        var z = {min: vertices[2], max: vertices[2]};
+        for (var i=0;i<vertices.length/3;i+=3){
+            x.min = vertices[i]<x.min?vertices[i]:x.min;
+            x.max = vertices[i]>x.max?vertices[i]:x.max;
+            y.min = vertices[i+1]<y.min?vertices[i+1]:y.min;
+            y.max = vertices[i+1]>y.max?vertices[i+1]:y.max;
+            z.min = vertices[i+2]<z.min?vertices[i+2]:z.min;
+            z.max = vertices[i+2]>z.max?vertices[i+2]:z.max;
+        }
+        x = (x.min+x.max)/2;
+        y = (y.min+y.max)/2;
+        z = (z.min+z.max)/2;
+        for (var i=0;i<vertices.length/3;i+=3){
+            vertices[i] -= x;
+            vertices[i+1].y -= y;
+            vertices[i+2].z -= z;
+        }
+        */
+        Model[name] = {mesh: new Mesh(), mtl: mtl, offset: [0, 0, 0], rotation: {x: 0, y: 0, z: 0}};
+        Model[name].mesh.fillOut(vertices, colors, texCoords, normals);
+        console.groupCollapsed();
+        console.log("Name: "+name);
+        console.log("Mtl : "+mtl);
+        console.log("Vert: "+vertices.length);
+        console.groupEnd();
+        console.log("Mtllib: "+Model.mtllib);
+        return Model;
+	},
+    getMtllib: function(resourceManager, text) {
+        var MtlLib = [];
+        var name = "";
         
-        return objects;
-	}
+        var lines = text.split("\n");
+        for(var l = 0; l < lines.length; l++) {
+            var elements = lines[l].split(" ");
+            if(elements[0] == "newmtl") {
+                name = elements[1];
+                MtlLib[name] = {};
+            }else if(elements[0] == "map_Kd") {
+                MtlLib[name].texture = elements[1];
+                console.log("Name   : "+name);
+                console.log("Texture: "+elements[1]);
+                TextureManager.loadResource(resourceManager, elements[1]);
+            }
+        }
+        console.log(MtlLib);
+        
+        return MtlLib;
+	},
+    loadModel: function(resourceManager, name) {
+        resourceManager.addTask();
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function(){
+            if(xmlhttp.status == 200 && xmlhttp.readyState == 4){
+                ModelLib[name] = ObjImporter.getModel(xmlhttp.responseText);
+                if (ModelLib[name].mtllib!=undefined) ObjImporter.loadMtllib(resourceManager, ModelLib[name].mtllib);
+                resourceManager.releaseTask();
+            }
+        }
+        xmlhttp.open("GET","res/models/"+name+".obj", true);
+        xmlhttp.send();
+    },
+    loadMtllib: function(resourceManager, name){
+        resourceManager.addTask();
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function(){
+            if(xmlhttp.status == 200 && xmlhttp.readyState == 4){
+                MtlLib[name] = ObjImporter.getMtllib(resourceManager, xmlhttp.responseText);
+                resourceManager.releaseTask();
+            }
+        }
+        xmlhttp.open("GET","res/models/"+name, true);
+        xmlhttp.send();
+    },
+    registerObj: function(name){
+        ObjLoadQueue.push(name);
+        return name;    
+    },
+    loadModels: function(resourceManager){
+        while (ObjLoadQueue.length>0){
+            this.loadModel(resourceManager, ObjLoadQueue.pop());
+        }
+    },
+    load: function(resourceManager){
+        this.loadModels(resourceManager);
+    }
 };
