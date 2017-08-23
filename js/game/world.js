@@ -1,11 +1,11 @@
 var World = {
     display: function() {
-        /*GLHelper.saveState();
+        GLHelper.saveState();
         TextureManager.disableTextures();
-        for (var i in this.mesh){
-            this.model.mesh.draw();
+        for (var i in this.model){
+            if (i != "mtllib") this.model[i].mesh.draw();
         }
-		GLHelper.loadState();*/
+		GLHelper.loadState();
     }
 };
 World.init = function(){
