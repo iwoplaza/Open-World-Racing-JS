@@ -7,202 +7,38 @@
         
         <meta charset="utf-8">
         
-        <script type="text/javascript" src="js/lib/gl-matrix.js"></script>
-        <script type="text/javascript" src="js/lib/jquery.js"></script>
+        <script src="js/lib/gl-matrix.js"></script>
+        <script src="js/lib/jquery.js"></script>
         
-        <script type="text/javascript" src="js/util/vector2f.js"></script>
-        <script type="text/javascript" src="js/util/vector3f.js"></script>
-        <script type="text/javascript" src="js/util/extensions.js"></script>
-        <script type="text/javascript" src="js/util/mouse.js"></script>
-        <script type="text/javascript" src="js/util/pointerLock.js"></script>
-        <script type="text/javascript" src="js/util/boundingBox.js"></script>
-        <script type="text/javascript" src="js/util/collisionHelper.js"></script>
-        <script type="text/javascript" src="js/util/objImporter.js"></script>
-        
-        <script type="text/javascript" src="js/util/time.js"></script>
-        <script type="text/javascript" src="js/main.js"></script>
-        <script type="text/javascript" src="js/math.js"></script>
-        <script type="text/javascript" src="js/camera.js"></script>
-        <script type="text/javascript" src="js/resourceManager.js"></script>
-        <script type="text/javascript" src="js/graphics/glhelper.js"></script>
-        <script type="text/javascript" src="js/graphics/framebuffer.js"></script>
-        <script type="text/javascript" src="js/graphics/shader.js"></script>
-        <script type="text/javascript" src="js/graphics/font.js"></script>
-        <script type="text/javascript" src="js/graphics/sprite.js"></script>
-        <script type="text/javascript" src="js/graphics/texture.js"></script>
-        <script type="text/javascript" src="js/graphics/draw.js"></script>
-        <script type="text/javascript" src="js/graphics/mesh.js"></script>
-        <script type="text/javascript" src="js/graphics/animation2d.js"></script>
-
-        <script type="text/javascript" src="js/screen/screen.js"></script>
-        <script type="text/javascript" src="js/screen/screenGame.js"></script>
-
-        <script type="text/javascript" src="js/game/car.js"></script>
-        <script type="text/javascript" src="js/game/world.js"></script>
-
+        <script src="js/util/vector2f.js"></script>
+        <script src="js/util/vector3f.js"></script>
+        <script src="js/util/extensions.js"></script>
+        <script src="js/util/mouse.js"></script>
+        <script src="js/util/pointerLock.js"></script>
+        <script src="js/util/boundingBox.js"></script>
+        <script src="js/util/collisionHelper.js"></script>
+        <script src="js/util/objImporter.js"></script>
+        <script src="js/util/time.js"></script>
+        <script src="js/graphics/glhelper.js"></script>
+        <script src="js/graphics/framebuffer.js"></script>
+        <script src="js/graphics/shader.js"></script>
+        <script src="js/graphics/font.js"></script>
+        <script src="js/graphics/sprite.js"></script>
+        <script src="js/graphics/texture.js"></script>
+        <script src="js/graphics/draw.js"></script>
+        <script src="js/graphics/mesh.js"></script>
+        <script src="js/graphics/animation2d.js"></script>
+        <script src="js/screen/screen.js"></script>
+        <script src="js/screen/screenGame.js"></script>
+        <script src="js/game/car.js"></script>
+        <script src="js/game/world.js"></script>
+        <script src="js/game/objects/gameObject.js"></script>
+        <script src="js/main.js"></script>
+        <script src="js/math.js"></script>
+        <script src="js/camera.js"></script>
+        <script src="js/resourceManager.js"></script>
+       
         <link rel="stylesheet" href="css/stylesheet.css">
-
-        <script id="default-vs" type="x-shader/x-vertex">
-            attribute vec3 aVertexPosition;
-            attribute vec2 aTextureCoord;
-            attribute vec4 aVertexColor;
-            attribute vec3 aNormal;
-            attribute vec4 aBoneIndicies;
-            attribute vec4 aBoneWeights;
-            
-            uniform mat4 uMMatrix;
-            uniform mat4 uVMatrix;
-            uniform mat4 uPMatrix;
-            uniform mat4 uNMatrix;
-            uniform vec4 uGlobalColor;
-
-            varying vec4 vColor;
-            varying vec2 vTextureCoord;
-            varying vec3 vNormal;
-            
-            void main(void) {
-                gl_Position = uPMatrix * uVMatrix * uMMatrix * vec4(aVertexPosition, 1.0);
-                vColor = aVertexColor*uGlobalColor;
-                vTextureCoord = aTextureCoord;
-                vNormal = (uNMatrix * vec4(aNormal, 1.0)).xyz;
-            }
-        </script>
-        
-        <script id="default-fs" type="x-shader/x-fragment">
-            precision mediump float;
-
-            varying vec4 vColor;
-            varying vec2 vTextureCoord;
-            varying vec3 vNormal;
-            
-            uniform sampler2D uSampler;
-            uniform int uEnableTextures;
-
-            void main(void) {
-                if(uEnableTextures == 1){
-                    gl_FragColor = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t))*vColor;
-                }else{
-                    gl_FragColor = vColor;
-                }
-                
-                if(gl_FragColor.a == 0.0) discard;
-            }
-        </script>
-
-        <script id="blocks-vs" type="x-shader/x-vertex">
-            attribute vec3 aVertexPosition;
-            attribute vec2 aTextureCoord;
-            attribute vec4 aVertexColor;
-            attribute vec3 aNormal;
-            attribute vec4 aBoneIndicies;
-            attribute vec4 aBoneWeights;
-            
-            uniform mat4 uMMatrix;
-            uniform mat4 uVMatrix;
-            uniform mat4 uPMatrix;
-            uniform mat4 uNMatrix;
-            uniform vec4 uGlobalColor;
-
-            varying vec4 vColor;
-            varying vec2 vTextureCoord;
-            varying vec3 vNormal;
-            
-            void main(void) {
-                gl_Position = uPMatrix * uVMatrix * uMMatrix * vec4(aVertexPosition, 1.0);
-                vColor = aVertexColor*uGlobalColor;
-                vTextureCoord = aTextureCoord;
-                vNormal = (uNMatrix * vec4(aNormal, 1.0)).xyz;
-            }
-        </script>
-                
-        <script id="blocks-fs" type="x-shader/x-fragment">
-            precision mediump float;
-
-            varying vec4 vColor;
-            varying vec2 vTextureCoord;
-            varying vec3 vNormal;
-                    
-            uniform sampler2D uSampler;
-            uniform int uEnableTextures;
-
-            void main(void) {
-                vec3 lightSource = vec3(5,10,2);
-                
-                vec3 L = normalize(lightSource.xyz);
-                vec3 diffuseColor = vec3(1,1,1) * (dot(vNormal,L)*0.5+0.5);
-                diffuseColor = clamp(diffuseColor, 0.0, 1.0);
-                
-                if(uEnableTextures == 1){
-                    gl_FragColor = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t))*vColor*vec4(diffuseColor, 1.0);
-                }else{
-                    gl_FragColor = vColor*vec4(diffuseColor, 1.0);
-                }
-                
-                if(gl_FragColor.a == 0.0) discard;
-            }
-        </script>
-        
-        <script id="car-vs" type="x-shader/x-vertex">
-            attribute vec3 aVertexPosition;
-            attribute vec2 aTextureCoord;
-            attribute vec4 aVertexColor;
-            attribute vec3 aNormal;
-            attribute vec4 aBoneIndicies;
-            attribute vec4 aBoneWeights;
-            
-            uniform mat4 uMMatrix;
-            uniform mat4 uVMatrix;
-            uniform mat4 uPMatrix;
-            uniform mat4 uNMatrix;
-            uniform vec4 uGlobalColor;
-
-            varying vec4 vColor;
-            varying vec2 vTextureCoord;
-            varying vec3 vNormal;
-            
-            void main(void) {
-                gl_Position = uPMatrix * uVMatrix * uMMatrix * vec4(aVertexPosition, 1.0);
-                vColor = aVertexColor*uGlobalColor;
-                vTextureCoord = aTextureCoord;
-                vNormal = (uNMatrix * vec4(aNormal, 1.0)).xyz;
-            }
-        </script>
-                
-        <script id="car-fs" type="x-shader/x-fragment">
-            precision mediump float;
-
-            varying vec4 vColor;
-            varying vec2 vTextureCoord;
-            varying vec3 vNormal;
-                    
-            uniform sampler2D uSampler;
-            uniform int uEnableTextures;
-            uniform vec3 uBodyColor;
-
-            void main(void) {
-                vec3 lightSource = vec3(5,10,2);
-                
-                vec3 L = normalize(lightSource.xyz);
-                vec3 diffuseColor = vec3(1,1,1) * (dot(vNormal,L)*0.5+0.5);
-                diffuseColor = clamp(diffuseColor, 0.0, 1.0);
-                
-                if(uEnableTextures == 1){
-                    vec4 textureColor = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t))*vColor*vec4(diffuseColor, 1.0);
-                    gl_FragColor = vec4(textureColor.rgb, 1.0);
-                    if(textureColor.a <= 0.1) {
-                        gl_FragColor = vec4(gl_FragColor.rgb, 0.5);
-                    }else if(textureColor.a <= 0.5) {
-                        gl_FragColor = vec4(gl_FragColor.rgb*uBodyColor, 1);
-                    }else if(textureColor.a <= 0.8) {
-                        gl_FragColor = vec4((texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t))).rgb, 1);
-                    }
-                }else{
-                    gl_FragColor = vColor*vec4(diffuseColor, 1.0);
-                }
-                
-                if(gl_FragColor.a == 0.0) discard;
-            }
-        </script>
     </head>
     <body onload="webGLStart();">
         <h1>Testing 3D</h1>

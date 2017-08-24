@@ -39,11 +39,11 @@ function Car(p_x, p_y, p_z) {
         if (keyState[68]) this.turnLeft(1);
         else if (keyState[65]) this.turnRight(1);
         else{
-            this.rotation *= 0.9;
+            this.rotation *= 0.98;
         }
         
         var velocityMagnitude = this.getVelocityMagnitude();
-        this.rotation *= Math.min(1, velocityMagnitude*0.1);
+        this.rotation *= Math.min(1, 0.9+velocityMagnitude*0.01);
         
         if(keyState[32]) {
            this.speed *= 0.95;
@@ -99,12 +99,16 @@ function Car(p_x, p_y, p_z) {
     }
     
     this.turnLeft = function(force) {
-        this.rotation -= force*0.001*this.speed*Time.delta;
+        var inverseMultiplier = (this.speed/Math.abs(this.speed));
+        if(this.speed == 0) inverseMultiplier = 0;
+        this.rotation -= force*0.03*Math.min(this.getVelocityMagnitude()*0.1, 1)*inverseMultiplier*Time.delta;
         this.wheelAngle = -0.5;
     }
     
     this.turnRight = function(force) {
-        this.rotation += force*0.001*this.speed*Time.delta;
+        var inverseMultiplier = (this.speed/Math.abs(this.speed));
+        if(this.speed == 0) inverseMultiplier = 0;
+        this.rotation += force*0.03*Math.min(this.getVelocityMagnitude()*0.1, 1)*inverseMultiplier*Time.delta;
         this.wheelAngle = 0.5;
     }
     
