@@ -19,7 +19,7 @@ function ScreenGame() {
         GLHelper.resetToWorldMatrix();
         ShaderManager.use("environment");
         
-        World.display();
+        //World.display();
         SceneManager.current.draw();
         this.car.display();
     }

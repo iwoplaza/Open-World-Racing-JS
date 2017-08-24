@@ -20,6 +20,19 @@
                     }
                 ]
             }
+        },
+        {
+            "name": "town",
+            "location": [0, 0, 0],
+            "needsUpdate": false,
+            "components": {
+                "ComponentMesh": [
+                    {
+                        "modelName": "town",
+                        "shader": "environment"
+                    }
+                ]
+            }
         }
     ]
 }

@@ -18,13 +18,14 @@ ComponentMesh.prototype.init = function() {
 
 ComponentMesh.prototype.draw = function() {
     ShaderManager.use(this.shader);
+    TextureManager.disableTextures();
     
     for (var group in this.model){
         if (group!="mtllib"){
             for (var node in this.model[group]){
                 GLHelper.saveState();
                 GLHelper.translate(this.model[group][node].offset);
-                TextureManager.bindTexture(TextureManager.database[MtlLib[this.model.mtllib][this.model[group][node].mtl].texture].textureId);
+                //TextureManager.bindTexture(TextureManager.database[MtlLib[this.model.mtllib][this.model[group][node].mtl].texture].textureId);
                 this.model[group][node].mesh.draw();
                 GLHelper.loadState();
             }
