@@ -1,9 +1,9 @@
 [VERTEX]
 
-attribute vec3 aVertexPosition;
-attribute vec2 aTextureCoord;
-attribute vec4 aVertexColor;
-attribute vec3 aNormal;
+in vec3 aVertexPosition;
+in vec2 aTextureCoord;
+in vec4 aVertexColor;
+in vec3 aNormal;
 
 uniform mat4 uMMatrix;
 uniform mat4 uVMatrix;
@@ -11,9 +11,9 @@ uniform mat4 uPMatrix;
 uniform mat4 uNMatrix;
 uniform vec4 uGlobalColor;
 
-varying vec4 vColor;
-varying vec2 vTextureCoord;
-varying vec3 vNormal;
+out vec4 vColor;
+out vec2 vTextureCoord;
+out vec3 vNormal;
 
 void main(void) {
     gl_Position = uPMatrix * uVMatrix * uMMatrix * vec4(aVertexPosition, 1.0);
@@ -24,11 +24,9 @@ void main(void) {
 
 [FRAGMENT]
 
-precision mediump float;
-
-varying vec4 vColor;
-varying vec2 vTextureCoord;
-varying vec3 vNormal;
+in vec4 vColor;
+in vec2 vTextureCoord;
+in vec3 vNormal;
 
 uniform sampler2D uSampler;
 uniform int uEnableTextures;

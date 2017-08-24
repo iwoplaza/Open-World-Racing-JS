@@ -50,7 +50,7 @@ var ShaderManager = {
 		var fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
 		
 		var vertexShaderSource = "";
-		var fragmentShaderSource = "";
+		var fragmentShaderSource = "precision mediump float;\n";
 		var mode = 0;
 		var lines = this.shaders[name].sourceCode.split('\n');
 		for(var i in lines) {
@@ -64,14 +64,21 @@ var ShaderManager = {
 				lines.splice(i, 1);
 				i--;
 			}else{
-				if(mode == 1)
+				if(mode == 1) {
+                    if(line.beginsWith('in'))
+                        line = line.replace(/in/, "attribute");
+                    else if(line.beginsWith('out'))
+                        line = line.replace(/out/, "varying");
 					vertexShaderSource += line + '\n';
-				else if(mode == 2)
+                }else if(mode == 2) {
+                    if(line.beginsWith('in'))
+                        line = line.replace(/in/, "varying");
 					fragmentShaderSource += line + '\n';
+                }
 			}
 		}
         
-        vertexShaderSource = vertexShaderSource.replace(/in /g, "attribute ");
+        
         console.log(vertexShaderSource);
         
 		gl.shaderSource(vertexShader, vertexShaderSource);
@@ -110,7 +117,7 @@ var ShaderManager = {
 			if(line.beginsWith('attribute')) {
 				var variableName = line.split(' ')[2].slice(0, -2);
 				var attributeName = variableName.charAt(1).toLowerCase() + variableName.slice(2);
-				console.log("Attribute", "Var:"+variableName+"Att:"+attributeName);
+				console.log("Attribute", "Var:"+variableName+", Att:"+attributeName);
 				this.shaders[name].attributes[attributeName] = gl.getAttribLocation(shaderProgram, variableName);
 				gl.enableVertexAttribArray(this.shaders[name].attributes[attributeName]);
 			}
