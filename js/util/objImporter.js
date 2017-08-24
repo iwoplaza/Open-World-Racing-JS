@@ -74,11 +74,6 @@ var ObjImporter = {
                     
                     Model[name] = {mesh: new Mesh(), mtl: mtl, offset: [x, y, z], rotation: {x: 0, y: 0, z: 0}};
                     Model[name].mesh.fillOut(Object.create(vertices), Object.create(colors), Object.create(texCoords), Object.create(normals));
-                    console.groupCollapsed();
-                    console.log("Name: "+name);
-                    console.log("Mtl : "+mtl);
-                    console.log("Vert: "+vertices.length);
-                    console.groupEnd();
                     vertices = [];
                     colors = [];
                     normals = [];
@@ -117,12 +112,6 @@ var ObjImporter = {
         
         Model[name] = {mesh: new Mesh(), mtl: mtl, offset: [x, y, z], rotation: {x: 0, y: 0, z: 0}};
         Model[name].mesh.fillOut(vertices, colors, texCoords, normals);
-        console.groupCollapsed();
-        console.log("Name: "+name);
-        console.log("Mtl : "+mtl);
-        console.log("Vert: "+vertices.length);
-        console.groupEnd();
-        console.log("Mtllib: "+Model.mtllib);
         return Model;
 	},
     getMtllib: function(resourceManager, text) {
@@ -137,12 +126,9 @@ var ObjImporter = {
                 MtlLib[name] = {};
             }else if(elements[0] == "map_Kd") {
                 MtlLib[name].texture = elements[1];
-                console.log("Name   : "+name);
-                console.log("Texture: "+elements[1]);
                 TextureManager.loadResource(resourceManager, elements[1]);
             }
         }
-        console.log(MtlLib);
         
         return MtlLib;
 	},
