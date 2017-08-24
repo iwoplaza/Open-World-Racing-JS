@@ -29,6 +29,11 @@ ResourceManager.prototype.load = function(jsonData) {
         TextureManager.loadResource(this, texture);
     }
     
+    //Loading Scene
+    if(jsonData.scene) {
+        SceneLoader.loadResource(this, jsonData.scene);
+    }
+    
     //Loading models and mtllibs
     ObjImporter.registerObj("car");
     ObjImporter.registerObj("town");

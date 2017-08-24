@@ -1,0 +1,38 @@
+{
+    "name": "Town",
+    "objects": [
+        {
+            "name": "testObject",
+            "location": [0, 2, 0],
+            "needsUpdates": true,
+            "components": {
+                "ComponentMesh": [
+                    {
+                        "modelName": "car",
+                        "shader": "car"
+                    }
+                ],
+            
+                "ComponentLight": [
+                    {
+                        "strength": 10,
+                        "color": [1, 0.7, 0.3]
+                    }
+                ]
+            }
+        },
+        {
+            "name": "town",
+            "location": [0, 0, 0],
+            "needsUpdate": false,
+            "components": {
+                "ComponentMesh": [
+                    {
+                        "modelName": "town",
+                        "shader": "environment"
+                    }
+                ]
+            }
+        }
+    ]
+}
