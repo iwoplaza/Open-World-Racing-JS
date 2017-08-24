@@ -15,9 +15,8 @@ function Car(p_x, p_y, p_z) {
     
     this.dot = 0;
     this.init = function() {
-        Car.model = ObjImporter.models["car"];
+        this.model = ModelLib["car"];
     }
-    
     this.update = function() {
         if (keyState[87]){
             this.speed+=2.00;
@@ -71,8 +70,9 @@ function Car(p_x, p_y, p_z) {
     }
     
 	this.display = function() {
-        Car.model["frontLeft"].rotation.z = this.wheelAngle;
-        Car.model["frontRight"].rotation.z = this.wheelAngle;
+        this.model["frontLeft"].rotation.z = this.wheelAngle;
+        this.model["frontRight"].rotation.z = this.wheelAngle;
+        
         
         ShaderManager.use("car");
         ShaderManager.setUniform3f("uBodyColor", this.bodyColor[0], this.bodyColor[1], this.bodyColor[2]);
@@ -82,8 +82,8 @@ function Car(p_x, p_y, p_z) {
         //GLHelper.translate([this.buttOffset, 0, 0]);
         GLHelper.rotate(this.angle+(90*Math.PI/180),[0,1,0]);
         GLHelper.translate([0, 0, this.buttOffset]);
-        for (var i in Car.model){
-            if (i != "mtllib") this.drawObject(Car.model[i]);
+        for (var i in this.model){
+            if (i != "mtllib") this.drawObject(this.model[i]);
         }
         
 		GLHelper.loadState();

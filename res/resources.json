@@ -3,10 +3,6 @@
         "environment", "car"
     ],
 	
-    "models": [
-        "car", "town"
-    ],
-    
     "textures": [
         
     ]

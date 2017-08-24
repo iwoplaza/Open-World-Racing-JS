@@ -1,6 +1,11 @@
+var ObjLoadQueue = new Array(0);
+var ModelLib = new Array(0);
+var MtlLib = new Array(0);
 var ObjImporter = {
-    models: new Array(0),
-    
+    buffer: new Array(0),
+    importModel: function(name){
+        registerObj(name+".obj");
+    },
     getModel: function(text) {
         var Model = {};
         var name = "";
@@ -121,7 +126,7 @@ var ObjImporter = {
         return Model;
 	},
     getMtllib: function(resourceManager, text) {
-        var mtlLib = [];
+        var MtlLib = [];
         var name = "";
         
         var lines = text.split("\n");
@@ -129,41 +134,53 @@ var ObjImporter = {
             var elements = lines[l].split(" ");
             if(elements[0] == "newmtl") {
                 name = elements[1];
-                mtlLib[name] = {};
+                MtlLib[name] = {};
             }else if(elements[0] == "map_Kd") {
-                mtlLib[name].texture = elements[1];
+                MtlLib[name].texture = elements[1];
                 console.log("Name   : "+name);
                 console.log("Texture: "+elements[1]);
                 TextureManager.loadResource(resourceManager, elements[1]);
             }
         }
-        console.log(mtlLib);
+        console.log(MtlLib);
         
-        return mtlLib;
+        return MtlLib;
 	},
+    loadModel: function(resourceManager, name) {
+        resourceManager.addTask();
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function(){
+            if(xmlhttp.status == 200 && xmlhttp.readyState == 4){
+                ModelLib[name] = ObjImporter.getModel(xmlhttp.responseText);
+                if (ModelLib[name].mtllib!=undefined) ObjImporter.loadMtllib(resourceManager, ModelLib[name].mtllib);
+                resourceManager.releaseTask();
+            }
+        }
+        xmlhttp.open("GET","res/models/"+name+".obj", true);
+        xmlhttp.send();
+    },
     loadMtllib: function(resourceManager, name){
         resourceManager.addTask();
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.onreadystatechange = function(){
             if(xmlhttp.status == 200 && xmlhttp.readyState == 4){
-                ObjImporter.models[name] = ObjImporter.getMtllib(resourceManager, xmlhttp.responseText);
+                MtlLib[name] = ObjImporter.getMtllib(resourceManager, xmlhttp.responseText);
                 resourceManager.releaseTask();
             }
         }
         xmlhttp.open("GET","res/models/"+name, true);
         xmlhttp.send();
     },
-    loadResource: function(resourceManager, name){
-        resourceManager.addTask();
-        var xmlhttp = new XMLHttpRequest();
-        xmlhttp.onreadystatechange = function(){
-            if(xmlhttp.status == 200 && xmlhttp.readyState == 4){
-                ObjImporter.models[name] = ObjImporter.getModel(xmlhttp.responseText);
-                if (ObjImporter.models[name].mtllib != undefined) ObjImporter.loadMtllib(resourceManager, ObjImporter.models[name].mtllib);
-                resourceManager.releaseTask();
-            }
+    registerObj: function(name){
+        ObjLoadQueue.push(name);
+        return name;    
+    },
+    loadModels: function(resourceManager){
+        while (ObjLoadQueue.length>0){
+            this.loadModel(resourceManager, ObjLoadQueue.pop());
         }
-        xmlhttp.open("GET","res/models/"+name+".obj", true);
-        xmlhttp.send();
+    },
+    load: function(resourceManager){
+        this.loadModels(resourceManager);
     }
 };
