@@ -72,7 +72,16 @@ function Car(p_x, p_y, p_z) {
 	this.display = function() {
         //this.model["frontLeft"].rotation.z = this.wheelAngle;
         //this.model["frontRight"].rotation.z = this.wheelAngle;
-        
+        if (this.model["sWheel"]){
+            for (var node in this.model["sWheel"]){
+                this.model["sWheel"][node].rotation.z = this.wheelAngle;
+            }
+        }
+        if (this.model["rWheel"]){
+            for (var node in this.model["rWheel"]){
+                this.model["rWheel"][node].rotation.z = -this.wheelAngle;
+            }
+        }
         
         ShaderManager.use("car");
         ShaderManager.setUniform3f("uBodyColor", this.bodyColor[0], this.bodyColor[1], this.bodyColor[2]);
@@ -82,12 +91,20 @@ function Car(p_x, p_y, p_z) {
         //GLHelper.translate([this.buttOffset, 0, 0]);
         GLHelper.rotate(this.angle+(90*Math.PI/180),[0,1,0]);
         GLHelper.translate([0, 0, this.buttOffset]);
-        for (var group in this.model){
-            if (group!="mtllib"){
-                for (var node in this.model[group]){
-                    this.drawObject(this.model[group][node]);
-                }
-            }
+        for (var node in this.model["interior"]){
+            this.drawObject(this.model["interior"][node]);
+        }
+        for (var node in this.model["frame"]){
+            this.drawObject(this.model["frame"][node]);
+        }
+        for (var node in this.model["nWheel"]){
+            this.drawObject(this.model["nWheel"][node]);
+        }
+        for (var node in this.model["sWheel"]){
+            this.drawObject(this.model["sWheel"][node]);
+        }
+        for (var node in this.model["window"]){
+            this.drawObject(this.model["window"][node]);
         }
         
 		GLHelper.loadState();
