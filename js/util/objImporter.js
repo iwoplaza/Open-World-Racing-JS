@@ -51,28 +51,28 @@ var ObjImporter = {
                 if (name != "") {
                     for(var i = 0; i < vertices.length/3*4; i++) colors.push(1);
                     for(var i = 0; i < vertices.length/3*2; i++) texCoords.push(0);
-                    /*
+                    
                     var x = {min: vertices[0], max: vertices[0]};
                     var y = {min: vertices[1], max: vertices[1]};
                     var z = {min: vertices[2], max: vertices[2]};
-                    for (var i=0;i<vertices.length/3;i+=3){
-                        x.min = vertices[i]<x.min?vertices[i]:x.min;
-                        x.max = vertices[i]>x.max?vertices[i]:x.max;
-                        y.min = vertices[i+1]<y.min?vertices[i+1]:y.min;
-                        y.max = vertices[i+1]>y.max?vertices[i+1]:y.max;
-                        z.min = vertices[i+2]<z.min?vertices[i+2]:z.min;
-                        z.max = vertices[i+2]>z.max?vertices[i+2]:z.max;
+                    for (var i=0;i<vertices.length;i+=3){
+                        x.min = ((vertices[i]<x.min)?(vertices[i]):(x.min));
+                        x.max = ((vertices[i]>x.max)?(vertices[i]):(x.max));
+                        y.min = ((vertices[i+1]<y.min)?(vertices[i+1]):(y.min));
+                        y.max = ((vertices[i+1]>y.max)?(vertices[i+1]):(y.max));
+                        z.min = ((vertices[i+2]<z.min)?(vertices[i+2]):(z.min));
+                        z.max = ((vertices[i+2]>z.max)?(vertices[i+2]):(z.max));
                     }
                     x = (x.min+x.max)/2;
                     y = (y.min+y.max)/2;
                     z = (z.min+z.max)/2;
-                    for (var i=0;i<vertices.length/3;i+=3){
+                    for (var i=0;i<vertices.length;i+=3){
                         vertices[i] -= x;
-                        vertices[i+1].y -= y;
-                        vertices[i+2].z -= z;
+                        vertices[i+1] -= y;
+                        vertices[i+2] -= z;
                     }
-                    */
-                    Model[name] = {mesh: new Mesh(), mtl: mtl, offset: [0, 0, 0], rotation: {x: 0, y: 0, z: 0}};
+                    
+                    Model[name] = {mesh: new Mesh(), mtl: mtl, offset: [x, y, z], rotation: {x: 0, y: 0, z: 0}};
                     Model[name].mesh.fillOut(Object.create(vertices), Object.create(colors), Object.create(texCoords), Object.create(normals));
                     console.groupCollapsed();
                     console.log("Name: "+name);
@@ -93,28 +93,29 @@ var ObjImporter = {
         }
         for(var i = 0; i < vertices.length/3*4; i++) colors.push(1);
         for(var i = 0; i < vertices.length/3*2; i++) texCoords.push(0);
-        /*
+        
         var x = {min: vertices[0], max: vertices[0]};
         var y = {min: vertices[1], max: vertices[1]};
         var z = {min: vertices[2], max: vertices[2]};
-        for (var i=0;i<vertices.length/3;i+=3){
-            x.min = vertices[i]<x.min?vertices[i]:x.min;
-            x.max = vertices[i]>x.max?vertices[i]:x.max;
-            y.min = vertices[i+1]<y.min?vertices[i+1]:y.min;
-            y.max = vertices[i+1]>y.max?vertices[i+1]:y.max;
-            z.min = vertices[i+2]<z.min?vertices[i+2]:z.min;
-            z.max = vertices[i+2]>z.max?vertices[i+2]:z.max;
+        
+        for (var i=0;i<vertices.length;i+=3){
+            x.min = ((vertices[i]<x.min)?(vertices[i]):(x.min));
+            x.max = ((vertices[i]>x.max)?(vertices[i]):(x.max));
+            y.min = ((vertices[i+1]<y.min)?(vertices[i+1]):(y.min));
+            y.max = ((vertices[i+1]>y.max)?(vertices[i+1]):(y.max));
+            z.min = ((vertices[i+2]<z.min)?(vertices[i+2]):(z.min));
+            z.max = ((vertices[i+2]>z.max)?(vertices[i+2]):(z.max));
         }
         x = (x.min+x.max)/2;
         y = (y.min+y.max)/2;
         z = (z.min+z.max)/2;
-        for (var i=0;i<vertices.length/3;i+=3){
+        for (var i=0;i<vertices.length;i+=3){
             vertices[i] -= x;
-            vertices[i+1].y -= y;
-            vertices[i+2].z -= z;
+            vertices[i+1] -= y;
+            vertices[i+2] -= z;
         }
-        */
-        Model[name] = {mesh: new Mesh(), mtl: mtl, offset: [0, 0, 0], rotation: {x: 0, y: 0, z: 0}};
+        
+        Model[name] = {mesh: new Mesh(), mtl: mtl, offset: [x, y, z], rotation: {x: 0, y: 0, z: 0}};
         Model[name].mesh.fillOut(vertices, colors, texCoords, normals);
         console.groupCollapsed();
         console.log("Name: "+name);

@@ -3,7 +3,12 @@ var World = {
         GLHelper.saveState();
         TextureManager.disableTextures();
         for (var i in this.model){
-            if (i != "mtllib") this.model[i].mesh.draw();
+            if (i != "mtllib"){
+                GLHelper.saveState();
+                GLHelper.translate(this.model[i].offset);
+                this.model[i].mesh.draw();
+                GLHelper.loadState();
+            }
         }
 		GLHelper.loadState();
     }
