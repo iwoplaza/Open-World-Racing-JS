@@ -8,8 +8,11 @@ var ObjImporter = {
     },
     getModel: function(text) {
         var Model = {};
+        var group = "noGroup";
         var name = "";
         var mtl = "";
+        
+        var groups = true;
 		
         var positions = new Array(0);
         var norms = new Array(0);
@@ -72,14 +75,21 @@ var ObjImporter = {
                         vertices[i+2] -= z;
                     }
                     
-                    Model[name] = {mesh: new Mesh(), mtl: mtl, offset: [x, y, z], rotation: {x: 0, y: 0, z: 0}};
-                    Model[name].mesh.fillOut(Object.create(vertices), Object.create(colors), Object.create(texCoords), Object.create(normals));
+                    Model[group][name] = {mesh: new Mesh(), mtl: mtl, offset: [x, y, z], rotation: {x: 0, y: 0, z: 0}};
+                    Model[group][name].mesh.fillOut(Object.create(vertices), Object.create(colors), Object.create(texCoords), Object.create(normals));
                     vertices = [];
                     colors = [];
                     normals = [];
                     texCoords = [];
                 }
-                name = elements[1];
+                if (elements[1].split(":").length>1){
+                    group = elements[1].split(":")[0];
+                    name = elements[1].split(":")[1];
+                }else{
+                    name = elements[1];
+                }
+                if (Model[group]==undefined) Model[group] = [];
+                
             }else if(elements[0] == "usemtl"){
                 mtl = elements[1];
             }else if(elements[0] == "mtllib"){
@@ -110,8 +120,8 @@ var ObjImporter = {
             vertices[i+2] -= z;
         }
         
-        Model[name] = {mesh: new Mesh(), mtl: mtl, offset: [x, y, z], rotation: {x: 0, y: 0, z: 0}};
-        Model[name].mesh.fillOut(vertices, colors, texCoords, normals);
+        Model[group][name] = {mesh: new Mesh(), mtl: mtl, offset: [x, y, z], rotation: {x: 0, y: 0, z: 0}};
+        Model[group][name].mesh.fillOut(vertices, colors, texCoords, normals);
         return Model;
 	},
     getMtllib: function(resourceManager, text) {
