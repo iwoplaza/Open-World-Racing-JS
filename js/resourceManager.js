@@ -30,10 +30,9 @@ ResourceManager.prototype.load = function(jsonData) {
     }
     
     //Loading models and mtllibs
-    for(let i in jsonData.models) {
-        let model = jsonData.models[i];
-        ObjImporter.loadResource(this, model);
-    }
+    ObjImporter.registerObj("car");
+    ObjImporter.registerObj("town");
+    ObjImporter.load(this);
 }
 
 ResourceManager.prototype.addTask = function() {

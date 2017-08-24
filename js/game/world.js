@@ -14,6 +14,6 @@ var World = {
     }
 };
 World.init = function(){
-    World.model = ObjImporter.models["town"];
+    World.model = ModelLib["town"];
     console.log("test");
 }
