@@ -33,7 +33,7 @@ function GameObject(_name) {
     this.needsUpdates = false;
 }
 
-GameObject.prototype.markUpdatable() {
+GameObject.prototype.markUpdatable = function() {
     this.needsUpdates = true;
     GameObjects.registerUpdatable(this);
     return this;

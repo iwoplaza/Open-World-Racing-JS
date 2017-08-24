@@ -4,7 +4,8 @@ function ScreenGame() {
         
     this.update = function() {
         this.ticks++;
-
+        
+        GameObjects.update();
         this.car.update();
     }
     
@@ -17,8 +18,9 @@ function ScreenGame() {
         GLHelper.identityModel();
         GLHelper.resetToWorldMatrix();
         ShaderManager.use("environment");
-
+        
         World.display();
+        GameObjects.draw();
         this.car.display();
     }
 
@@ -66,4 +68,6 @@ ScreenGame.prototype.init = function() {
     Camera.rotation.y = 90.0;
     Camera.rotation.x = 20.0;
     this.car = new Car(0,0,0);
+    
+    GameObjects.add(new GameObject("testObject").markUpdatable());
 }
