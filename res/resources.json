@@ -3,6 +3,8 @@
         "environment", "car"
     ],
 	
+    "scene": "town",
+    
     "textures": [
         
     ]
