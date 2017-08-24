@@ -70,8 +70,8 @@ function Car(p_x, p_y, p_z) {
     }
     
 	this.display = function() {
-        this.model["frontLeft"].rotation.z = this.wheelAngle;
-        this.model["frontRight"].rotation.z = this.wheelAngle;
+        //this.model["frontLeft"].rotation.z = this.wheelAngle;
+        //this.model["frontRight"].rotation.z = this.wheelAngle;
         
         
         ShaderManager.use("car");
@@ -82,8 +82,12 @@ function Car(p_x, p_y, p_z) {
         //GLHelper.translate([this.buttOffset, 0, 0]);
         GLHelper.rotate(this.angle+(90*Math.PI/180),[0,1,0]);
         GLHelper.translate([0, 0, this.buttOffset]);
-        for (var i in this.model){
-            if (i != "mtllib") this.drawObject(this.model[i]);
+        for (var group in this.model){
+            if (group!="mtllib"){
+                for (var node in this.model[group]){
+                    this.drawObject(this.model[group][node]);
+                }
+            }
         }
         
 		GLHelper.loadState();

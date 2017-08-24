@@ -2,12 +2,14 @@ var World = {
     display: function() {
         GLHelper.saveState();
         TextureManager.disableTextures();
-        for (var i in this.model){
-            if (i != "mtllib"){
-                GLHelper.saveState();
-                GLHelper.translate(this.model[i].offset);
-                this.model[i].mesh.draw();
-                GLHelper.loadState();
+        for (var group in this.model){
+            if (group!="mtllib"){
+                for (var node in this.model[group]){
+                    GLHelper.saveState();
+                    GLHelper.translate(this.model[group][node].offset);
+                    this.model[group][node].mesh.draw();
+                    GLHelper.loadState();
+                }
             }
         }
 		GLHelper.loadState();

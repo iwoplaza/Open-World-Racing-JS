@@ -80,7 +80,8 @@ function webGLStart() {
     gl.enable(gl.CULL_FACE);
     gl.cullFace(gl.BACK);
     
-    (new ResourceManager()).preloadFromFile('resources.json', onFinishedLoading);
+    mainResourceManager = (new ResourceManager());
+    mainResourceManager.preloadFromFile('resources.json', onFinishedLoading);
 }
 
 function onFinishedLoading(){
