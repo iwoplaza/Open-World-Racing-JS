@@ -70,7 +70,10 @@ var ShaderManager = {
 					fragmentShaderSource += line + '\n';
 			}
 		}
-		
+        
+        vertexShaderSource = vertexShaderSource.replace(/in /g, "attribute ");
+        console.log(vertexShaderSource);
+        
 		gl.shaderSource(vertexShader, vertexShaderSource);
 		gl.compileShader(vertexShader);
 
@@ -101,8 +104,9 @@ var ShaderManager = {
 		}
 		this.shaders[name].program = shaderProgram;
 		
-		for(var i in lines) {
-			var line = lines[i];
+        let linesForAnalize = (vertexShaderSource + fragmentShaderSource).split('\n');
+		for(var i in linesForAnalize) {
+			var line = linesForAnalize[i];
 			if(line.beginsWith('attribute')) {
 				var variableName = line.split(' ')[2].slice(0, -2);
 				var attributeName = variableName.charAt(1).toLowerCase() + variableName.slice(2);

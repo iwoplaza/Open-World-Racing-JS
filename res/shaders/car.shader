@@ -1,9 +1,9 @@
 [VERTEX]
 
-attribute vec3 aVertexPosition;
-attribute vec2 aTextureCoord;
-attribute vec4 aVertexColor;
-attribute vec3 aNormal;
+in vec3 aVertexPosition;
+in vec2 aTextureCoord;
+in vec4 aVertexColor;
+in vec3 aNormal;
 
 uniform mat4 uMMatrix;
 uniform mat4 uVMatrix;
