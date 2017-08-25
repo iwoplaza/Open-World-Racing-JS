@@ -25,7 +25,9 @@ ComponentMesh.prototype.draw = function() {
             for (var node in this.model[group]){
                 GLHelper.saveState();
                 GLHelper.translate(this.model[group][node].offset);
-                //TextureManager.bindTexture(TextureManager.database[MtlLib[this.model.mtllib][this.model[group][node].mtl].texture].textureId);
+                var texture = this.model.mtllib;
+                if(MtlLib[texture])
+                    TextureManager.bindTexture(TextureManager.database[MtlLib[texture][this.model[group][node].mtl].texture].textureId);
                 this.model[group][node].mesh.draw();
                 GLHelper.loadState();
             }
