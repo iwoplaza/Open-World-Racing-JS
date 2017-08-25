@@ -143,6 +143,9 @@ var ObjImporter = {
         return MtlLib;
 	},
     loadModel: function(resourceManager, name) {
+        if(ModelLib[name] != undefined)
+            return;
+        
         resourceManager.addTask();
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.onreadystatechange = function(){

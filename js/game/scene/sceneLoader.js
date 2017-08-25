@@ -34,7 +34,7 @@ var SceneLoader = {
                     gameObject.addComponent(component);
                 }
             }
-            SceneManager.current.gameObjects.push(gameObject);
+            SceneManager.current.addGameObject(gameObject);
         }
     }
 };

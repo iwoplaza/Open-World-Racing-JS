@@ -1,9 +1,10 @@
 function ScreenGame() {
     this.keyState = new Array(127),
     this.framebuffer = new Framebuffer(gl.viewportWidth, gl.viewportWidth),
+    this.ticks = 0;
         
     this.update = function() {
-        this.ticks++;
+        this.ticks += Time.delta;
         
         SceneManager.current.update();
         this.car.update();
@@ -17,7 +18,7 @@ function ScreenGame() {
         GLHelper.perspective(75, gl.viewportWidth/gl.viewportHeight, 0.1, 1000.0);
         GLHelper.identityModel();
         GLHelper.resetToWorldMatrix();
-        ShaderManager.use("environment");
+        SceneManager.current.processLighting();
         
         //World.display();
         SceneManager.current.draw();

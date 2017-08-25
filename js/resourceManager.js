@@ -37,6 +37,7 @@ ResourceManager.prototype.load = function(jsonData) {
     //Loading models and mtllibs
     ObjImporter.registerObj("car");
     ObjImporter.registerObj("town");
+    ObjImporter.registerObj("truck");
     ObjImporter.load(this);
 }
 
