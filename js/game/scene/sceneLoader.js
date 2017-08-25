@@ -15,6 +15,9 @@ var SceneLoader = {
     loadFromString: function(resourceManager, code) {
         var jsonData = JSON.parse(code);
         
+        var shadersToLoad = [];
+        var modelsToLoad = [];
+        
         SceneManager.current = new Scene(jsonData.name);
         var objects = jsonData.objects;
         for(let o in objects) {
@@ -30,11 +33,26 @@ var SceneLoader = {
                     var component = new componentType;
                     for(let p in componentNode) {
                         component[p] = componentNode[p];
+                        if(p == "shader") {
+                            shadersToLoad.push(componentNode[p]);
+                        }else if(p == "modelName") {
+                            modelsToLoad.push(componentNode[p]);
+                        }
                     }
                     gameObject.addComponent(component);
                 }
             }
             SceneManager.current.addGameObject(gameObject);
+        }
+        
+        //Load necessary shaders
+        for(var i in shadersToLoad) {
+            ShaderManager.loadResource(resourceManager, shadersToLoad[i]);
+        }
+        
+        //Load necessary models
+        for(var i in modelsToLoad) {
+            ObjImporter.loadModel(resourceManager, modelsToLoad[i]);
         }
     }
 };
