@@ -53,8 +53,8 @@ var ShaderManager = {
 		var vertexShader = gl.createShader(gl.VERTEX_SHADER);
 		var fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
 		
-		var vertexShaderSource = "";
-		var fragmentShaderSource = "precision mediump float;\n";
+		var vertexShaderSource = "precision mediump float;\nprecision mediump int;";
+		var fragmentShaderSource = "precision mediump float;\nprecision mediump int;";
 		var mode = 0;
 		var lines = this.shaders[name].sourceCode.split('\n');
 		for(var i in lines) {
@@ -189,15 +189,27 @@ var ShaderManager = {
 	},
     
     populateLightingData: function(lights) {
+        console.log("Populating lighting data");
+        
         for(let name in this.shaders) {
             this.use(name);
             this.setUniform1i("uLightCount", lights.length);
             for(var i = 0; i < lights.length && i < this.MAX_LIGHTS; i++) {
                 this.setUniform3f("uLight["+i+"].source", lights[i].gameObject.location.x, lights[i].gameObject.location.y, lights[i].gameObject.location.z);
-                this.setUniform4f("uLight["+i+"].diffuseColor", lights[i].diffuseColor[0], lights[i].diffuseColor[1], lights[i].diffuseColor[2], lights[i].diffuseColor[3]);
-                this.setUniform4f("uLight["+i+"].ambientColor", lights[i].ambientColor[0], lights[i].ambientColor[1], lights[i].ambientColor[2], lights[i].ambientColor[3]);
+                this.setUniform3f("uLight["+i+"].diffuseColor", lights[i].diffuseColor[0], lights[i].diffuseColor[1], lights[i].diffuseColor[2]);
+                this.setUniform3f("uLight["+i+"].ambientColor", lights[i].ambientColor[0], lights[i].ambientColor[1], lights[i].ambientColor[2]);
                 this.setUniform1f("uLight["+i+"].range", lights[i].range);
             }
+        }
+    },
+    
+    alterLightingData: function(i, light) {
+        for(let name in this.shaders) {
+            this.use(name);
+            this.setUniform3f("uLight["+i+"].source", lights[i].gameObject.location.x, lights[i].gameObject.location.y, lights[i].gameObject.location.z);
+            this.setUniform4f("uLight["+i+"].diffuseColor", lights[i].diffuseColor[0], lights[i].diffuseColor[1], lights[i].diffuseColor[2]);
+            this.setUniform4f("uLight["+i+"].ambientColor", lights[i].ambientColor[0], lights[i].ambientColor[1], lights[i].ambientColor[2]);
+            this.setUniform1f("uLight["+i+"].range", lights[i].range);
         }
     },
     

@@ -18,7 +18,6 @@ function ScreenGame() {
         GLHelper.perspective(75, gl.viewportWidth/gl.viewportHeight, 0.1, 1000.0);
         GLHelper.identityModel();
         GLHelper.resetToWorldMatrix();
-        SceneManager.current.processLighting();
         
         //World.display();
         SceneManager.current.draw();

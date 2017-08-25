@@ -1,5 +1,7 @@
 [VERTEX]
 
+const int MAX_LIGHTS = 10;
+
 in vec3 aVertexPosition;
 in vec2 aTextureCoord;
 in vec4 aVertexColor;
@@ -17,8 +19,8 @@ out vec2 vTextureCoord;
 out vec3 vNormal;
 
 void main(void) {
-    vPosition = (uMMatrix * vec4(aVertexPosition, 1.0)).xyz;
     gl_Position = uPMatrix * uVMatrix * uMMatrix * vec4(aVertexPosition, 1.0);
+    vPosition = (uMMatrix * vec4(aVertexPosition, 1.0)).xyz;
     vColor = aVertexColor;
     vTextureCoord = aTextureCoord;
     vNormal = (uNMatrix * vec4(aNormal, 1.0)).xyz;
@@ -33,19 +35,19 @@ in vec4 vColor;
 in vec2 vTextureCoord;
 in vec3 vNormal;
 
-uniform sampler2D uSampler;
-uniform int uEnableTextures;
-
 struct Light
 {
     vec3 source;
-    vec4 ambientColor;
-    vec4 diffuseColor;
+    vec3 ambientColor;
+    vec3 diffuseColor;
     float range;
 };
 
 uniform Light uLight[MAX_LIGHTS];
 uniform int uLightCount;
+
+uniform sampler2D uSampler;
+uniform int uEnableTextures;
 
 void main(void) {
     vec3 diffuseColor = vec3(0, 0, 0);
@@ -53,26 +55,18 @@ void main(void) {
     for(int i = 0; i < MAX_LIGHTS; i++) {
         if(i >= uLightCount)
             break;
-    
-        vec3 lightSource = uLight[i].source;
-        vec4 lightColor = uLight[i].diffuseColor;
-        vec4 lightAmbientColor = uLight[i].ambientColor;
-        float lightRange = uLight[i].range;
-        lightColor.rgb /= lightColor.a;
-        lightAmbientColor.rgb /= lightAmbientColor.a;
         
-        if(lightRange == -1.0) {
-            vec3 L = normalize(lightSource);
-            diffuseColor += lightAmbientColor.rgb;
-            diffuseColor += clamp(lightColor.rgb * (dot(vNormal,L)*0.5+0.5), 0.0, 1.0);
+        if(uLight[i].range == -1.0) {
+            vec3 L = normalize(uLight[i].source);
+            diffuseColor += uLight[i].ambientColor;
+            diffuseColor += clamp(uLight[i].diffuseColor * (dot(vNormal,L)*0.5+0.5), 0.0, 1.0);
         }else{
-            float att = clamp((1.0 - length(vPosition - lightSource)/lightRange), 0.0, 1.0);
-            vec3 L = normalize(lightSource - vPosition);
-            diffuseColor += lightAmbientColor.rgb * att * att;
-            diffuseColor += clamp(lightColor.rgb * (dot(vNormal,L)*0.5+0.5), 0.0, 1.0) * att * att;
+            vec3 vertexToLight = uLight[i].source - vPosition;
+            float att = clamp((1.0 - length(vertexToLight)/uLight[i].range), 0.0, 1.0);
+            diffuseColor += uLight[i].ambientColor * att * att;
+            diffuseColor += clamp(uLight[i].diffuseColor * (dot(vNormal,normalize(vertexToLight))*0.5+0.5), 0.0, 1.0) * att * att;
         }
     }
-    
     
     if(uEnableTextures == 1){
         gl_FragColor = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t))*vColor*vec4(diffuseColor, 1.0);

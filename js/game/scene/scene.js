@@ -12,9 +12,25 @@ function Scene(_name) {
     this.lightsList = [];
 }
 
+Scene.prototype.init = function() {
+    this.initialized = true;
+    
+    for(let i in this.gameObjects) {
+        let gameObject = this.gameObjects[i];
+        if(gameObject && gameObject.init)
+            gameObject.init();
+    }
+    
+    this.updateLightsList();
+}
+
 Scene.prototype.setName = function(_name) {
     this.name = _name;
     return this;
+}
+
+Scene.prototype.isInitialized = function() {
+    return this.initialized;
 }
 
 Scene.prototype.update = function() {
@@ -33,8 +49,11 @@ Scene.prototype.draw = function() {
     }
 }
 
-Scene.prototype.processLighting = function() {
-    ShaderManager.populateLightingData(this.lightsList);
+Scene.prototype.updateEmissive = function(gameObject) {
+    let lights = gameObject.emit();
+    for(let i in lights) {
+        ShaderManager.alterLightingData(lights[i].index, lights[i]);
+    }
 }
 
 Scene.prototype.registerUpdatable = function(gameObject) {
@@ -66,21 +85,15 @@ Scene.prototype.updateLightsList = function() {
         if(gameObject && gameObject.emit)
             this.lightsList = this.lightsList.concat(gameObject.emit());
     }
+    
+    for(let i in this.lightsList) {
+        this.lightsList[i].index = i;
+    }
+    
+    ShaderManager.populateLightingData(this.lightsList);
 }
 
 Scene.prototype.addGameObject = function(gameObject) {
     this.gameObjects[gameObject.name] = gameObject;
     console.log("Added new GameObject:", gameObject.name);
-}
-
-Scene.prototype.init = function() {
-    this.initialized = true;
-    
-    for(let i in this.gameObjects) {
-        let gameObject = this.gameObjects[i];
-        if(gameObject && gameObject.init)
-            gameObject.init();
-    }
-    
-    this.updateLightsList();
 }

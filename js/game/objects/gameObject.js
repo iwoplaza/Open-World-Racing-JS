@@ -1,7 +1,7 @@
 
 function GameObject(_name) {
     this.name = _name;
-    this.location = new Vector3(0, 0, 0);
+    var location = new Vector3(0, 0, 0);
     this.componentGroups = [];
     this.needsUpdates = false;
     this.emissive = false;
@@ -105,7 +105,14 @@ GameObject.prototype.emit = function() {
     return lights;
 }
 
+GameObject.prototype.getLocation = function() {
+    return location;
+}
+
 GameObject.prototype.setLocation = function(x, y, z) {
     this.location = new Vector3(x, y, z);
+    if(this.emissive) {
+        SceneHandler.current.updateEmissive(this);
+    }
     return this;
 }
