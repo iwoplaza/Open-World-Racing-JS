@@ -44,3 +44,5 @@ ResourceManager.prototype.releaseTask = function() {
     if(this.remainingTasks <= 0)
         this.callback();
 }
+
+ResourceManager.prototype.RESOURCE_PATH = "res/";

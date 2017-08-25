@@ -11,19 +11,6 @@ var ShaderManager = {
             gl.uniform4f(gl.getUniformLocation(program, "uGlobalColor"), 1, 1, 1, 1);
         });
 
-        this.create("blocks", function(program) {
-            program.normalAttribute = gl.getAttribLocation(program, "aNormal");
-            gl.enableVertexAttribArray(program.normalAttribute);
-            gl.uniform4f(gl.getUniformLocation(program, "uGlobalColor"), 1, 1, 1, 1);
-        });
-
-        this.create("car", function(program) {
-            program.normalAttribute = gl.getAttribLocation(program, "aNormal");
-            gl.enableVertexAttribArray(program.normalAttribute);
-            gl.uniform4f(gl.getUniformLocation(program, "uGlobalColor"), 1, 1, 1, 1);
-            gl.uniform3f(gl.getUniformLocation(program, "uBodyColor"), 0, 1, 1);
-        });
-
         this.use("default");
     },
     
@@ -45,7 +32,7 @@ var ShaderManager = {
                 ShaderManager.compile(resourceManager, name);
             }
         }
-        xmlhttp.open("GET","res/shaders/"+name+".shader", true);
+        xmlhttp.open("GET", ResourceManager.prototype.RESOURCE_PATH+name, true);
         xmlhttp.send();
     },
 	

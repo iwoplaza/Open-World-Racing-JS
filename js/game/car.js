@@ -15,7 +15,7 @@ function Car(p_x, p_y, p_z) {
     
     this.dot = 0;
     this.init = function() {
-        this.model = ModelLib["car"];
+        this.model = ModelLib["models/car.obj"];
     }
     this.update = function() {
         if (keyState[87]){
@@ -82,7 +82,7 @@ function Car(p_x, p_y, p_z) {
             }
         }
         
-        ShaderManager.use("car");
+        ShaderManager.use("shaders/car.shader");
         ShaderManager.setUniform3f("uBodyColor", this.bodyColor[0], this.bodyColor[1], this.bodyColor[2]);
         
 		GLHelper.saveState();

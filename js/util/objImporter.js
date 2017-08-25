@@ -142,20 +142,20 @@ var ObjImporter = {
         
         return MtlLib;
 	},
-    loadModel: function(resourceManager, name) {
-        if(ModelLib[name] != undefined)
+    loadModel: function(resourceManager, path) {
+        if(ModelLib[path] != undefined)
             return;
         
         resourceManager.addTask();
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.onreadystatechange = function(){
             if(xmlhttp.status == 200 && xmlhttp.readyState == 4){
-                ModelLib[name] = ObjImporter.getModel(xmlhttp.responseText);
-                if (ModelLib[name].mtllib!=undefined) ObjImporter.loadMtllib(resourceManager, ModelLib[name].mtllib);
+                ModelLib[path] = ObjImporter.getModel(xmlhttp.responseText);
+                if (ModelLib[path].mtllib!=undefined) ObjImporter.loadMtllib(resourceManager, ModelLib[path].mtllib);
                 resourceManager.releaseTask();
             }
         }
-        xmlhttp.open("GET","res/models/"+name+".obj", true);
+        xmlhttp.open("GET", ResourceManager.prototype.RESOURCE_PATH+path, true);
         xmlhttp.send();
     },
     loadMtllib: function(resourceManager, name){
@@ -167,7 +167,7 @@ var ObjImporter = {
                 resourceManager.releaseTask();
             }
         }
-        xmlhttp.open("GET","res/models/"+name, true);
+        xmlhttp.open("GET",ResourceManager.prototype.RESOURCE_PATH+name, true);
         xmlhttp.send();
     },
     registerObj: function(name){

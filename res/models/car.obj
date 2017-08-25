@@ -1,6 +1,6 @@
 # Blender v2.78 (sub 0) OBJ File: 'untitled.blend'
 # www.blender.org
-mtllib car.mtl
+mtllib models/car.mtl
 o window:cab
 v -0.995745 0.570260 0.928170
 v 1.004255 0.570260 0.928170
