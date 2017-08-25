@@ -29,6 +29,7 @@ var PointerLock = {
     },
     
     changeCallback: function(e) {
+        PointerLock.locked = (document.pointerLockElement != undefined || document.mozPointerLockElement != undefined);
     },
     
     isCompatible: function() {
@@ -36,7 +37,7 @@ var PointerLock = {
     },
     
     isLocked: function() {
-        return document.pointerLockElement === this.element || document.mozPointerLockElement === this.element;
+        return this.locked;
     },
     
     request: function() {
@@ -44,6 +45,5 @@ var PointerLock = {
     },
     
     exit: function() {
-        document.exitPointerLock();
     }
 };

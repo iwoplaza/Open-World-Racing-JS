@@ -46,12 +46,11 @@ function Car(p_x, p_y, p_z) {
         this.rotation *= Math.min(1, 0.9+velocityMagnitude*0.01);
         
         if(keyState[32]) {
-           this.speed *= 0.95;
+           this.speed *= 0.5;
         }
         
         this.angle += this.rotation;
         this.rotation = Math.max(-this.rotationLimit, Math.min(this.rotation, this.rotationLimit));
-        
         
         if(velocityMagnitude > this.maxVelocity) {
             this.velocity.normalize();

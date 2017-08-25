@@ -21,10 +21,8 @@ function Mesh() {
             gl.disableVertexAttribArray(ShaderManager.getAttribute('textureCoord'));
         }
         
-        if(ShaderManager.hasAttribute('normal')){
-            gl.bindBuffer(gl.ARRAY_BUFFER, this.normalBuffer);
-            ShaderManager.vertexAttribPointer('normal', this.normalBuffer.itemSize, gl.FLOAT, false, 0, 0);
-        }
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.normalBuffer);
+        ShaderManager.vertexAttribPointer('normal', this.normalBuffer.itemSize, gl.FLOAT, false, 0, 0);
         
         GLHelper.publishMatrixUniforms();
 		ShaderManager.setUniform1i('uEnableTextures', TextureManager.areTexturesEnabled());
