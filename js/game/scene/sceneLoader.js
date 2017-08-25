@@ -1,5 +1,5 @@
 var SceneLoader = {
-    loadResource: function(resourceManager, name) {
+    loadResource: function(resourceManager, path) {
         resourceManager.addTask();
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.onreadystatechange = function(){
@@ -8,7 +8,7 @@ var SceneLoader = {
                 resourceManager.releaseTask();
             }
         }
-        xmlhttp.open("GET","res/scenes/"+name+".json",true);
+        xmlhttp.open("GET", ResourceManager.prototype.RESOURCE_PATH+path, true);
         xmlhttp.send();
     },
     

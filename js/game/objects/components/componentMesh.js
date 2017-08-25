@@ -1,8 +1,8 @@
-function ComponentMesh(_modelName, _shader) {
+function ComponentMesh() {
     Component.call(this);
     
-    this.model = ModelLib[_modelName];
-    this.shader = _shader;
+    this.modelName = "";
+    this.shader = "environment";
 }
 ComponentMesh.prototype = Object.create(Component.prototype);
 Components.register(ComponentMesh);

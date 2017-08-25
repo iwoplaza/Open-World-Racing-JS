@@ -8,8 +8,8 @@
             "components": {
                 "ComponentMesh": [
                     {
-                        "modelName": "car",
-                        "shader": "car"
+                        "modelName": "models/car.obj",
+                        "shader": "shaders/car.shader"
                     }
                 ],
                 "ComponentLight": [
@@ -28,8 +28,8 @@
             "components": {
                 "ComponentMesh": [
                     {
-                        "modelName": "town",
-                        "shader": "environment"
+                        "modelName": "models/town.obj",
+                        "shader": "shaders/environment.shader"
                     }
                 ]
             }
