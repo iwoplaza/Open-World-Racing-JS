@@ -1,7 +1,7 @@
 var Components = {
     componentTypes: [],
     register: function(component) {
-        component.prototype.name = component.name;
+        component.prototype.type = component.name;
         this.componentTypes[component.name] = component;
     }
 };

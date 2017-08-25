@@ -1,9 +1,10 @@
 
 function GameObject(_name) {
     this.name = _name;
-    this.location = new Vector3(0, 0, 0);
+    var location = new Vector3(0, 0, 0);
     this.componentGroups = [];
     this.needsUpdates = false;
+    this.emissive = false;
 }
 
 GameObject.prototype.init = function() {
@@ -23,12 +24,43 @@ GameObject.prototype.markUpdatable = function() {
 }
 
 GameObject.prototype.addComponent = function(component) {
-    if(!this.componentGroups[component.name])
-        this.componentGroups[component.name] = [];
+    if(!this.componentGroups[component.type])
+        this.componentGroups[component.type] = [];
     
     component.gameObject = this;
-    this.componentGroups[component.name].push(component);
+    this.componentGroups[component.type].push(component);
+    this.onComponentAdded(component);
     return this;
+}
+
+GameObject.prototype.removeComponent = function(component) {
+    if(!this.componentGroups[component.type])
+       return this;
+    
+    for(var i in this.componentGroups[component.type]) {
+        if(this.componentGroups[component.type][i] == component) {
+            this.componentGroups[component.type].splice(i, 1);
+            
+            this.onComponentRemoved(component);
+            return this;
+        }
+    }
+}
+
+GameObject.prototype.onComponentAdded = function(component) {
+    if(component.type == "ComponentLight" && !this.emissive) {
+        this.emissive = true;
+        SceneManager.current.registerEmissive(this);
+    }
+}
+
+GameObject.prototype.onComponentRemoved = function(component) {
+    if(component.type == "ComponentLight") {
+        if(component.componentGroups[component.type].length <= 0) {
+            this.emissive = false;
+            SceneManager.current.unregisterEmissive(this);
+        }
+    }
 }
 
 GameObject.prototype.update = function() {
@@ -57,7 +89,30 @@ GameObject.prototype.draw = function() {
     GLHelper.loadState();
 }
 
+GameObject.prototype.emit = function() {
+    var lights = [];
+    
+    var group = this.componentGroups["ComponentLight"];
+    if(group != undefined) {
+        for(let i in group) {
+            var component = group[i];
+            if(component && component.emit){
+                lights = lights.concat(component.emit());
+            }
+        }
+    }
+    
+    return lights;
+}
+
+GameObject.prototype.getLocation = function() {
+    return location;
+}
+
 GameObject.prototype.setLocation = function(x, y, z) {
     this.location = new Vector3(x, y, z);
+    if(this.emissive) {
+        SceneHandler.current.updateEmissive(this);
+    }
     return this;
 }

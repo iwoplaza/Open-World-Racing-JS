@@ -6,9 +6,13 @@ Components.register(ComponentLight);
 
 /*
     Properties:
-        strength: number,
-        color: [r, g, b]
+        range: number,
+        color: [r, g, b, a]
 */
 ComponentLight.prototype.init = function() {
     
+}
+
+ComponentLight.prototype.emit = function() {
+    return this;
 }

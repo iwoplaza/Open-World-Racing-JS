@@ -1,11 +1,3 @@
 {
-    "shaders": [
-        "environment", "car"
-    ],
-	
-    "scene": "town",
-    
-    "textures": [
-        
-    ]
+    "scene": "town"
 }

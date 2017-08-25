@@ -48,19 +48,19 @@ document.onmousemove = function(e) {
     Mouse.timeout = setTimeout(Mouse.onMouseStop, 10);
     
     ScreenHandler.handleMouseMove(e);
-    runEventCallbacks("mouseMove");
+    //runEventCallbacks("mouseMove");
 }
 
 document.onmousedown = function(e) {
 	Mouse.mouseState[e.button] = true;
     ScreenHandler.handleMousePressed(e);
-    runEventCallbacks("mouseDown", e);
+    //runEventCallbacks("mouseDown", e);
 }
 
 document.onmouseup = function(e) {
 	Mouse.mouseState[e.button] = false;
     ScreenHandler.handleMouseReleased(e);
-    runEventCallbacks("mouseUp", e);
+    //runEventCallbacks("mouseUp", e);
 }
 
 var mouseEventQueue = new Array(0);

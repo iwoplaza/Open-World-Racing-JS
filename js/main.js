@@ -63,22 +63,20 @@ function webGLStart() {
     canvas = document.getElementById("gameCanvas");
     initGL();
 	PointerLock.init(canvas);
-    /*ShaderManager.init();
     
-    
-    World.init();*/
-
 	for(var i = 0; i < keyState.length; i++){
 		keyState[i] = false;
 	}
 	
-    gl.clearColor(0.0, 0.0, 0.0, 1.0);
     gl.enable(gl.DEPTH_TEST);
 	gl.enable(gl.BLEND);
     gl.bindTexture(gl.TEXTURE_2D, null);
 	gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
     gl.enable(gl.CULL_FACE);
     gl.cullFace(gl.BACK);
+    gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
+    gl.clearColor(0.2, 0.7, 1, 1);
+    GLHelper.perspective(75, gl.viewportWidth/gl.viewportHeight, 0.1, 1000.0);
     
     mainResourceManager = (new ResourceManager());
     mainResourceManager.preloadFromFile('resources.json', onFinishedLoading);
@@ -86,11 +84,10 @@ function webGLStart() {
 
 function onFinishedLoading(){
     console.log("Finished loading resources!");
-    tick();
     gameStart();
+    tick();
 }
 
 function gameStart() {
     ScreenHandler.open(new ScreenGame());
-	World.init();
 }

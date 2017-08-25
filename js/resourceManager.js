@@ -33,11 +33,6 @@ ResourceManager.prototype.load = function(jsonData) {
     if(jsonData.scene) {
         SceneLoader.loadResource(this, jsonData.scene);
     }
-    
-    //Loading models and mtllibs
-    ObjImporter.registerObj("car");
-    ObjImporter.registerObj("town");
-    ObjImporter.load(this);
 }
 
 ResourceManager.prototype.addTask = function() {

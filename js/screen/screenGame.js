@@ -1,25 +1,19 @@
 function ScreenGame() {
     this.keyState = new Array(127),
     this.framebuffer = new Framebuffer(gl.viewportWidth, gl.viewportWidth),
+    this.ticks = 0;
         
     this.update = function() {
-        this.ticks++;
+        this.ticks += Time.delta;
         
         SceneManager.current.update();
         this.car.update();
     }
     
     this.display = function() {
-        gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
-        gl.clearColor(0.2, 0.7, 1, 1);
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
-        GLHelper.perspective(75, gl.viewportWidth/gl.viewportHeight, 0.1, 1000.0);
-        GLHelper.identityModel();
         GLHelper.resetToWorldMatrix();
-        ShaderManager.use("environment");
         
-        //World.display();
         SceneManager.current.draw();
         this.car.display();
     }
@@ -70,6 +64,4 @@ ScreenGame.prototype.init = function() {
     this.car = new Car(0,0,0);
     
     SceneManager.current.init();
-    
-    //GameObjects.add(new GameObject("testObject").setLocation(0, 2, 0).addComponent(new ComponentMesh("car", "environment")).markUpdatable());
 }

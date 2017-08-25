@@ -12,11 +12,11 @@
                         "shader": "car"
                     }
                 ],
-            
                 "ComponentLight": [
                     {
-                        "strength": 10,
-                        "color": [1, 0.7, 0.3]
+                        "range": 20,
+                        "ambientColor": [0, 0, 0],
+                        "diffuseColor": [0.1, 0.5, 1]
                     }
                 ]
             }
@@ -30,6 +30,20 @@
                     {
                         "modelName": "town",
                         "shader": "environment"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "sun",
+            "location": [1, 2, 0.5],
+            "needsUpdates": false,
+            "components": {
+                "ComponentLight": [
+                    {
+                        "range": -1,
+                        "ambientColor": [0.2, 0.2, 0.2],
+                        "diffuseColor": [0.7, 0.65, 0.6]
                     }
                 ]
             }

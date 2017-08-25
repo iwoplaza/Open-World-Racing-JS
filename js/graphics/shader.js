@@ -1,7 +1,8 @@
 var ShaderManager = {
     shaders: new Array(0),
     current: null,
-	
+	MAX_LIGHTS: 10,
+    
     //This function is called after the resources have been loaded
     postInit: function() {
         this.create("default", function(program) {
@@ -27,6 +28,9 @@ var ShaderManager = {
     },
     
     loadResource: function(resourceManager, name) {
+        if(this.shaders[name] != undefined)
+            return;
+        
         this.shaders[name] = {
             name: name,
 			attributes: []
@@ -49,8 +53,8 @@ var ShaderManager = {
 		var vertexShader = gl.createShader(gl.VERTEX_SHADER);
 		var fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
 		
-		var vertexShaderSource = "";
-		var fragmentShaderSource = "precision mediump float;\n";
+		var vertexShaderSource = "precision mediump float;\nprecision mediump int;";
+		var fragmentShaderSource = "precision mediump float;\nprecision mediump int;";
 		var mode = 0;
 		var lines = this.shaders[name].sourceCode.split('\n');
 		for(var i in lines) {
@@ -65,14 +69,14 @@ var ShaderManager = {
 				i--;
 			}else{
 				if(mode == 1) {
-                    if(line.beginsWith('in'))
-                        line = line.replace(/in/, "attribute");
-                    else if(line.beginsWith('out'))
-                        line = line.replace(/out/, "varying");
+                    if(line.beginsWith('in '))
+                        line = line.replace(/in /, "attribute ");
+                    else if(line.beginsWith('out '))
+                        line = line.replace(/out /, "varying ");
 					vertexShaderSource += line + '\n';
                 }else if(mode == 2) {
-                    if(line.beginsWith('in'))
-                        line = line.replace(/in/, "varying");
+                    if(line.beginsWith('in '))
+                        line = line.replace(/in /, "varying ");
 					fragmentShaderSource += line + '\n';
                 }
 			}
@@ -184,10 +188,37 @@ var ShaderManager = {
 		gl.vertexAttribPointer(this.getAttribute(attribute), size, type, flag, x, y);
 	},
     
+    populateLightingData: function(lights) {
+        console.log("Populating lighting data");
+        
+        for(let name in this.shaders) {
+            this.use(name);
+            this.setUniform1i("uLightCount", lights.length);
+            for(var i = 0; i < lights.length && i < this.MAX_LIGHTS; i++) {
+                this.setUniform3f("uLight["+i+"].source", lights[i].gameObject.location.x, lights[i].gameObject.location.y, lights[i].gameObject.location.z);
+                this.setUniform3f("uLight["+i+"].diffuseColor", lights[i].diffuseColor[0], lights[i].diffuseColor[1], lights[i].diffuseColor[2]);
+                this.setUniform3f("uLight["+i+"].ambientColor", lights[i].ambientColor[0], lights[i].ambientColor[1], lights[i].ambientColor[2]);
+                this.setUniform1f("uLight["+i+"].range", lights[i].range);
+            }
+        }
+    },
+    
+    alterLightingData: function(i, light) {
+        for(let name in this.shaders) {
+            this.use(name);
+            this.setUniform3f("uLight["+i+"].source", lights[i].gameObject.location.x, lights[i].gameObject.location.y, lights[i].gameObject.location.z);
+            this.setUniform4f("uLight["+i+"].diffuseColor", lights[i].diffuseColor[0], lights[i].diffuseColor[1], lights[i].diffuseColor[2]);
+            this.setUniform4f("uLight["+i+"].ambientColor", lights[i].ambientColor[0], lights[i].ambientColor[1], lights[i].ambientColor[2]);
+            this.setUniform1f("uLight["+i+"].range", lights[i].range);
+        }
+    },
+    
     setUniform1i(p_name, p_x) { gl.uniform1i(ShaderManager.getUniformLocation(p_name), p_x) },
     setUniform1f(p_name, p_x) { gl.uniform1f(ShaderManager.getUniformLocation(p_name), p_x) },
     setUniform2i(p_name, p_x, p_y) { gl.uniform2i(ShaderManager.getUniformLocation(p_name), p_x, p_y) },
     setUniform2f(p_name, p_x, p_y) { gl.uniform2f(ShaderManager.getUniformLocation(p_name), p_x, p_y) },
     setUniform3i(p_name, p_x, p_y, p_z) { gl.uniform3i(ShaderManager.getUniformLocation(p_name), p_x, p_y, p_z) },
-    setUniform3f(p_name, p_x, p_y, p_z) { gl.uniform3f(ShaderManager.getUniformLocation(p_name), p_x, p_y, p_z) }
+    setUniform3f(p_name, p_x, p_y, p_z) { gl.uniform3f(ShaderManager.getUniformLocation(p_name), p_x, p_y, p_z) },
+    setUniform4i(p_name, p_x, p_y, p_z, p_w) { gl.uniform4i(ShaderManager.getUniformLocation(p_name), p_x, p_y, p_z, p_w) },
+    setUniform4f(p_name, p_x, p_y, p_z, p_w) { gl.uniform4f(ShaderManager.getUniformLocation(p_name), p_x, p_y, p_z, p_w) }
 };

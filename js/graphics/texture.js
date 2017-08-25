@@ -37,6 +37,9 @@ var TextureManager = {
     },
 
     loadResource: function(resourceManager, filePath) {
+        if(TextureManager.database[filePath] != undefined)
+            return;
+        
         resourceManager.addTask();
         var fontImage = new Image();
 		fontImage.resourceManager = resourceManager;
