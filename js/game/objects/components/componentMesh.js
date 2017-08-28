@@ -18,8 +18,9 @@ ComponentMesh.prototype.init = function() {
 
 ComponentMesh.prototype.draw = function() {
     ShaderManager.use(this.shader);
-    TextureManager.disableTextures();
     
+    ModelRenderer.renderModel(this.model);
+    /*
     for (var group in this.model){
         if (group!="mtllib"){
             for (var node in this.model[group]){
@@ -27,10 +28,11 @@ ComponentMesh.prototype.draw = function() {
                 GLHelper.translate(this.model[group][node].offset);
                 var texture = this.model.mtllib;
                 if(MtlLib[texture])
-                    TextureManager.bindTexture(TextureManager.database[MtlLib[texture][this.model[group][node].mtl].texture].textureId);
+                    if (MtlLib[texture][this.model[group][node].mtl]) TextureManager.bindTexture(TextureManager.database[MtlLib[texture][this.model[group][node].mtl].texture].textureId);
                 this.model[group][node].mesh.draw();
                 GLHelper.loadState();
             }
         }
     }
+    */
 }

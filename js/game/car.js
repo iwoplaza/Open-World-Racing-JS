@@ -87,36 +87,13 @@ function Car(p_x, p_y, p_z) {
         
 		GLHelper.saveState();
         GLHelper.translate([this.x,this.y,this.z]);
-        //GLHelper.translate([this.buttOffset, 0, 0]);
         GLHelper.rotate(this.angle+(90*Math.PI/180),[0,1,0]);
         GLHelper.translate([0, 0, this.buttOffset]);
-        for (var node in this.model["interior"]){
-            this.drawObject(this.model["interior"][node]);
-        }
-        for (var node in this.model["frame"]){
-            this.drawObject(this.model["frame"][node]);
-        }
-        for (var node in this.model["nWheel"]){
-            this.drawObject(this.model["nWheel"][node]);
-        }
-        for (var node in this.model["sWheel"]){
-            this.drawObject(this.model["sWheel"][node]);
-        }
-        for (var node in this.model["window"]){
-            this.drawObject(this.model["window"][node]);
-        }
+        
+        ModelRenderer.renderModel(this.model);
         
 		GLHelper.loadState();
 	}
-    
-    this.drawObject = function(object){
-        GLHelper.saveState();
-        GLHelper.translate(object.offset);
-        GLHelper.rotate(object.rotation.z, [0, 1, 0]);
-        TextureManager.bindTexture(TextureManager.database[MtlLib[this.model.mtllib][object.mtl].texture].textureId);
-        object.mesh.draw();
-        GLHelper.loadState();
-    }
     
     this.turnLeft = function(force) {
         var inverseMultiplier = (this.speed/Math.abs(this.speed));

@@ -125,7 +125,7 @@ var ObjImporter = {
         return Model;
 	},
     getMtllib: function(resourceManager, text) {
-        var MtlLib = [];
+        var MtlLib = new Array(0);
         var name = "";
         
         var lines = text.split("\n");
@@ -133,10 +133,12 @@ var ObjImporter = {
             var elements = lines[l].split(" ");
             if(elements[0] == "newmtl") {
                 name = elements[1];
-                MtlLib[name] = {};
+                MtlLib[name] = new Object;
             }else if(elements[0] == "map_Kd") {
                 MtlLib[name].texture = elements[1];
-                TextureManager.loadResource(resourceManager, elements[1]);
+                if (elements[1] != "."){
+                    TextureManager.loadResource(resourceManager, elements[1]);
+                }
             }
         }
         
