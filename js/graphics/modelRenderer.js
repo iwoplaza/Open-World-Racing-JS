@@ -37,7 +37,9 @@ var ModelRenderer = {
     renderPart: function(part){
         GLHelper.saveState();
         GLHelper.translate(part.offset);
+        GLHelper.rotate(part.rotation.y, [0, 0, 1]);
         GLHelper.rotate(part.rotation.z, [0, 1, 0]);
+        GLHelper.rotate(part.rotation.x, [1, 0, 0]);
         TextureManager.disableTextures();
         if(MtlLib[this.mtllib]){
             if (MtlLib[this.mtllib][part.mtl]){

@@ -36,6 +36,17 @@ function Car(p_x, p_y, p_z) {
             this.velocity.z *= 0.95;
         }
         
+        if (this.model["sWheel"]){
+            for (var node in this.model["sWheel"]){
+                this.model["sWheel"][node].rotation.x += this.speed*Math.PI/180;
+            }
+        }
+        if (this.model["nWheel"]){
+            for (var node in this.model["nWheel"]){
+                this.model["nWheel"][node].rotation.x += this.speed*Math.PI/180;
+            }
+        }
+        
         if (keyState[68]) this.turnLeft(1);
         else if (keyState[65]) this.turnRight(1);
         else{
