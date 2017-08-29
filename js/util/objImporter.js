@@ -25,6 +25,7 @@ var ObjImporter = {
         
         var lines = text.split("\n");
         for(var l = 0; l < lines.length; l++) {
+            lines[l] = lines[l].replace(String.fromCharCode(13),'');
             var elements = lines[l].split(" ");
             if(elements[0] == "v") {
                 positions.push(parseFloat(elements[1]));
@@ -88,12 +89,14 @@ var ObjImporter = {
                 }else{
                     name = elements[1];
                 }
-                if (Model[group]==undefined) Model[group] = [];
+                if (Model[group]==undefined){
+                    Model[group] = [];
+                }
                 
             }else if(elements[0] == "usemtl"){
                 mtl = elements[1];
             }else if(elements[0] == "mtllib"){
-                Model.mtllib = elements[1];
+                Model.mtllib = elements[1].split(".")[0];
             }
         }
         for(var i = 0; i < vertices.length/3*4; i++) colors.push(1);
@@ -125,7 +128,7 @@ var ObjImporter = {
         return Model;
 	},
     getMtllib: function(resourceManager, text) {
-        var MtlLib = new Array(0);
+        var MtlLib = {};
         var name = "";
         
         var lines = text.split("\n");
@@ -133,7 +136,7 @@ var ObjImporter = {
             var elements = lines[l].split(" ");
             if(elements[0] == "newmtl") {
                 name = elements[1];
-                MtlLib[name] = new Object;
+                MtlLib[name] = {};
             }else if(elements[0] == "map_Kd") {
                 MtlLib[name].texture = elements[1];
                 if (elements[1] != "."){
@@ -169,7 +172,7 @@ var ObjImporter = {
                 resourceManager.releaseTask();
             }
         }
-        xmlhttp.open("GET",ResourceManager.prototype.RESOURCE_PATH+name, true);
+        xmlhttp.open("GET",ResourceManager.prototype.RESOURCE_PATH+name+".mtl", true);
         xmlhttp.send();
     },
     registerObj: function(name){

@@ -8,7 +8,7 @@
             "components": {
                 "ComponentMesh": [
                     {
-                        "modelName": "models/car.obj",
+                        "modelName": "models/truck.obj",
                         "shader": "shaders/car.shader"
                     }
                 ],

@@ -13,7 +13,7 @@ Components.register(ComponentMesh);
         shader: string
 */
 ComponentMesh.prototype.init = function() {
-    this.model = ModelLib[this.modelName];
+    this.model = Object.create(ModelLib[this.modelName]);
 }
 
 ComponentMesh.prototype.draw = function() {
