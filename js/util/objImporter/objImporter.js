@@ -133,6 +133,7 @@ var ObjImporter = {
         
         var lines = text.split("\n");
         for(var l = 0; l < lines.length; l++) {
+            lines[l] = lines[l].replace(String.fromCharCode(13),'');
             var elements = lines[l].split(" ");
             if(elements[0] == "newmtl") {
                 name = elements[1];
@@ -140,6 +141,7 @@ var ObjImporter = {
             }else if(elements[0] == "map_Kd") {
                 MtlLib[name].texture = elements[1];
                 if (elements[1] != "."){
+                    console.log(elements[1]);
                     TextureManager.loadResource(resourceManager, elements[1]);
                 }
             }

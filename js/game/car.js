@@ -15,7 +15,7 @@ function Car(p_x, p_y, p_z) {
     
     this.dot = 0;
     this.init = function() {
-        this.model = Object.create(ModelLib["models/truck.obj"]);
+        this.model = Object.create(ModelLib["models/car.obj"]);
     }
     this.update = function() {
         if (keyState[87]){

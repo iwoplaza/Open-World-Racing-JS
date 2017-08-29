@@ -32,8 +32,7 @@ var TextureManager = {
     },
 
     preload: function() {
-        this.loadTexture("res/car.png");
-        this.loadTexture("res/interior.png");
+        
     },
 
     loadResource: function(resourceManager, filePath) {
