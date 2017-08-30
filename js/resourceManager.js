@@ -1,8 +1,8 @@
-function ResourceManager() {
+function Resources() {
     this.remainingTasks = 0;
 }
 
-ResourceManager.prototype.preloadFromFile = function(filename, callback) {
+Resources.prototype.preloadFromFile = function(filename, callback) {
     this.callback = callback;
     
     var xmlhttp = new XMLHttpRequest();
@@ -16,7 +16,7 @@ ResourceManager.prototype.preloadFromFile = function(filename, callback) {
     xmlhttp.send();
 }
 
-ResourceManager.prototype.load = function(jsonData) {
+Resources.prototype.load = function(jsonData) {
     //Loading Shaders
     for(let i in jsonData.shaders) {
         let shader = jsonData.shaders[i];
@@ -35,14 +35,14 @@ ResourceManager.prototype.load = function(jsonData) {
     }
 }
 
-ResourceManager.prototype.addTask = function() {
+Resources.prototype.addTask = function() {
     this.remainingTasks++;
 }
 
-ResourceManager.prototype.releaseTask = function() {
+Resources.prototype.releaseTask = function() {
     this.remainingTasks--;
     if(this.remainingTasks <= 0)
         this.callback();
 }
 
-ResourceManager.prototype.RESOURCE_PATH = "res/";
+Resources.prototype.ROOT_PATH = "res/";

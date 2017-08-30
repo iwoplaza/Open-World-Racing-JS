@@ -8,7 +8,7 @@
             "components": {
                 "ComponentMesh": [
                     {
-                        "modelName": "models/car.obj",
+                        "modelName": "models/truck.obj",
                         "shader": "shaders/car.shader"
                     }
                 ],
@@ -17,6 +17,11 @@
                         "range": 20,
                         "ambientColor": [0, 0, 0],
                         "diffuseColor": [0.1, 0.5, 1]
+                    }
+                ],
+                "ComponentScript": [
+                    {
+                        "script": "scripts/test.js"
                     }
                 ]
             }

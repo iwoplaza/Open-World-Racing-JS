@@ -78,7 +78,7 @@ function webGLStart() {
     gl.clearColor(0.2, 0.7, 1, 1);
     GLHelper.perspective(75, gl.viewportWidth/gl.viewportHeight, 0.1, 1000.0);
     
-    mainResourceManager = (new ResourceManager());
+    mainResourceManager = (new Resources());
     mainResourceManager.preloadFromFile('resources.json', onFinishedLoading);
 }
 

@@ -32,7 +32,7 @@ var ShaderManager = {
                 ShaderManager.compile(resourceManager, name);
             }
         }
-        xmlhttp.open("GET", ResourceManager.prototype.RESOURCE_PATH+name, true);
+        xmlhttp.open("GET", Resources.prototype.ROOT_PATH+name, true);
         xmlhttp.send();
     },
 	
@@ -70,8 +70,6 @@ var ShaderManager = {
 		}
         
         
-        console.log(vertexShaderSource);
-        
 		gl.shaderSource(vertexShader, vertexShaderSource);
 		gl.compileShader(vertexShader);
 
@@ -108,7 +106,6 @@ var ShaderManager = {
 			if(line.beginsWith('attribute')) {
 				var variableName = line.split(' ')[2].slice(0, -2);
 				var attributeName = variableName.charAt(1).toLowerCase() + variableName.slice(2);
-				console.log("Attribute", "Var:"+variableName+", Att:"+attributeName);
 				this.shaders[name].attributes[attributeName] = gl.getAttribLocation(shaderProgram, variableName);
 				gl.enableVertexAttribArray(this.shaders[name].attributes[attributeName]);
 			}

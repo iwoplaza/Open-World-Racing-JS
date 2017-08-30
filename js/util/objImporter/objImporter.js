@@ -162,7 +162,7 @@ var ObjImporter = {
                 resourceManager.releaseTask();
             }
         }
-        xmlhttp.open("GET", ResourceManager.prototype.RESOURCE_PATH+path, true);
+        xmlhttp.open("GET", Resources.prototype.ROOT_PATH+path, true);
         xmlhttp.send();
     },
     loadMtllib: function(resourceManager, name){
@@ -174,7 +174,7 @@ var ObjImporter = {
                 resourceManager.releaseTask();
             }
         }
-        xmlhttp.open("GET",ResourceManager.prototype.RESOURCE_PATH+name+".mtl", true);
+        xmlhttp.open("GET",Resources.prototype.ROOT_PATH+name+".mtl", true);
         xmlhttp.send();
     },
     registerObj: function(name){

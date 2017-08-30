@@ -7,5 +7,5 @@ var ScriptManager = {
     
     get: function(path) {
         return this.database[path];
-    }
+    },
 };

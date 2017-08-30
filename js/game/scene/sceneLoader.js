@@ -8,7 +8,7 @@ var SceneLoader = {
                 resourceManager.releaseTask();
             }
         }
-        xmlhttp.open("GET", ResourceManager.prototype.RESOURCE_PATH+path, true);
+        xmlhttp.open("GET", Resources.prototype.ROOT_PATH+path, true);
         xmlhttp.send();
     },
     
